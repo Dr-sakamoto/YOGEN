@@ -55,7 +55,7 @@ class Episode(BaseModel):
     sources: list[str] = Field(default_factory=list, description="伝承・解説の出典")
     publish_at: str | None = Field(default=None, description="予約公開日 YYYY-MM-DD")
     colors: list[str] | None = Field(
-        default=None, description="その回の4色（墨は固定）を手で選ぶとき。palette.py のキー（bero, yoko …）"
+        default=None, description="その回の差し色1〜3色。palette.py のキー（pink, green, blue, purple）"
     )
     youtube_video_id: str | None = None
     review_notes: str = ""

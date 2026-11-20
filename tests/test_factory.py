@@ -30,18 +30,18 @@ def sample_episode(tmp_path: Path, **kw) -> Episode:
     return Episode.model_validate(data)
 
 
-def test_palette_picks_five(tmp_path):
-    from yogen.palette import PALETTE, pick, text_on
+def test_palette_for_episode():
+    from types import SimpleNamespace
 
-    im = Image.new("RGB", (300, 300), (215, 204, 171))  # 紙の地
-    im.paste((32, 51, 78), (0, 0, 300, 120))             # ベロ藍（褪せた色）
-    im.paste((158, 67, 57), (0, 150, 150, 300))          # 紅（褪せた色）
-    keys = pick(im)
-    assert len(keys) == 5 and keys[0] == "sumi"
-    assert "bero" in keys and "beni" in keys
-    fams = [PALETTE[k].family for k in keys]
-    assert len(set(fams)) == 5  # 同じ系統は重ならない
-    assert text_on(PALETTE["ki"].hex) == PALETTE["sumi"].hex
+    from yogen.palette import PALETTE, for_episode, text_on
+
+    cols = for_episode(SimpleNamespace(colors=["green", "purple"]))
+    assert [c.key for c in cols] == ["sumi", "green", "purple"]
+    assert [c.key for c in for_episode(SimpleNamespace(colors=None))] == ["sumi", "pink"]
+    with pytest.raises(ValueError):
+        for_episode(SimpleNamespace(colors=["yellow"]))  # 毒黄は題字の地だけ
+    assert text_on(PALETTE["blue"].hex) == PALETTE["white"].hex
+    assert text_on(PALETTE["green"].hex) == PALETTE["sumi"].hex
 
 
 @pytest.mark.parametrize("shape", ["uroko", "hitodama", "medama"])
