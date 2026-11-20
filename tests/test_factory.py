@@ -172,3 +172,14 @@ def test_brand_marks():
     assert wordmark_mask().getbbox() is not None
     m = logo_mask()
     assert m.width > m.height  # 妖幻の横組み
+
+
+def test_sticker_recipes_are_valid():
+    from yogen.materials import load_index
+    from yogen.stickers import recipes
+
+    idx = load_index()
+    for key, items in recipes().items():
+        for r in items:
+            assert r["material"] in idx, (key, r["material"])  # 出典が記録されている
+            assert r["method"] in ("cutout", "key", "torn")

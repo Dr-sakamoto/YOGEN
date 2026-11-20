@@ -11,6 +11,42 @@ danjuro_skeleton:
   - skeleton
   title: 'Ichikawa Danjūrō V as a Skeleton, Spirit of the Renegade Monk Seigen, and Iwai Hanshirō IV as
     the Cherry Princess, in “Flower of Edo: An Ichikawa Saga” (Edo no Hana Mimasu Soga)'
+daruma_painting:
+  artist: null
+  credit: Art Institute of Chicago
+  date: c. 1550
+  id: '117201'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/117201
+  source: aic
+  tags:
+  - daruma
+  title: Daruma
+goldfish_inro:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 18th–19th century
+  id: '58887'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/58887
+  source: met
+  tags:
+  - kingyo
+  title: Case (Inrō) with Design of Goldfish and Reed with Wave Pattern
+goldfish_painting:
+  artist: Watanabe Seitei
+  credit: The Metropolitan Museum of Art
+  date: ca. 1887
+  id: '54739'
+  kind: print
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/54739
+  source: met
+  tags:
+  - kingyo
+  title: Goldfish
 great_wave:
   artist: Katsushika Hokusai
   credit: Art Institute of Chicago
@@ -88,6 +124,54 @@ koheiji:
   - ghost
   - skeleton
   title: Kohada Koheiji, from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+netsuke_cat:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59775'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59775
+  source: met
+  tags:
+  - neko
+  title: Netsuke of Cat
+netsuke_cat_bowl:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59248'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59248
+  source: met
+  tags:
+  - neko
+  title: Netsuke of Cat Lying on a Bowl, underneath which is a Fish
+netsuke_daruma:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59205'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59205
+  source: met
+  tags:
+  - daruma
+  title: Netsuke of Daruma
+netsuke_fox:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '60375'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/60375
+  source: met
+  tags:
+  - kitsune
+  title: Netsuke of Fox
 netsuke_oni:
   artist: null
   credit: The Metropolitan Museum of Art
@@ -100,6 +184,18 @@ netsuke_oni:
   tags:
   - oni
   title: Netsuke of Demon
+netsuke_oni_mask:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59710'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59710
+  source: met
+  tags:
+  - oni
+  title: 'Netsuke of Noh Mask: Ōni'
 netsuke_oni_red:
   artist: null
   credit: The Metropolitan Museum of Art
@@ -137,6 +233,18 @@ netsuke_skull:
   - skeleton
   - skull
   title: Skeleton Astride a Skull
+netsuke_skull_small:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '60216'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/60216
+  source: met
+  tags:
+  - dokuro
+  title: Netsuke of Skull
 oiwa:
   artist: Katsushika Hokusai
   credit: Art Institute of Chicago
@@ -163,6 +271,19 @@ red_fuji:
   - hokusai
   title: Shower Below the Summit (Sanka hakuu), from the series "Thirty-Six Views of Mount Fuji (Fugaku
     sanjurokkei)"
+red_fuji_met:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: ca. 1830–32
+  id: '55736'
+  kind: print
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/55736
+  source: met
+  tags:
+  - fuji
+  title: South Wind, Clear Sky (Gaifū kaisei), also known as Red Fuji, from the series Thirty-six Views
+    of Mount Fuji (Fugaku sanjūrokkei)
 sarayashiki:
   artist: Katsushika Hokusai
   credit: Art Institute of Chicago

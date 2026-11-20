@@ -1,0 +1,26 @@
+# 切り貼り用の素材（ステッカー）のレシピ。自作アイコンの代わりに、本物の図版から切り出す。
+#   material  materials/index.yaml のキー（出典はそちら）
+#   method    cutout = 立体物の写真の背景を切り抜く / key = 無地の地（絹・紙）を色の差で抜く
+#             torn = 範囲をちぎった紙片として切り出す
+#   crop      [左, 上, 右, 下]（画像の幅・高さに対する割合）。省略で全体
+kingyo:
+  - {material: goldfish_painting, method: key, crop: [0.33, 0.45, 0.8, 0.8], note: 金魚の絵（絹本）}
+  - {material: goldfish_inro, method: cutout, note: 金魚と葦の印籠}
+fuji:
+  - {material: red_fuji_met, method: torn, crop: [0.22, 0.12, 0.98, 0.9], note: 北斎「凱風快晴」の富士}
+chochin:
+  - {material: oiwa, method: torn, crop: [0.04, 0.04, 0.96, 0.92], note: 北斎「百物語 お岩さん」の提灯}
+kitsune:
+  - {material: netsuke_fox, method: cutout, note: 狐の根付}
+dokuro:
+  - {material: netsuke_skull_small, method: cutout, note: 髑髏の根付}
+  - {material: netsuke_skull, method: cutout, note: 髑髏にまたがる骸骨の根付}
+oni:
+  - {material: netsuke_oni_mask, method: cutout, note: 能面「大飛出」の根付}
+  - {material: netsuke_oni_red, method: cutout, note: 赤い鬼の根付}
+daruma:
+  - {material: netsuke_daruma, method: cutout, note: 達磨の根付}
+  - {material: daruma_painting, method: torn, crop: [0.03, 0.46, 0.97, 0.97], note: 達磨図（掛軸）}
+neko:
+  - {material: netsuke_cat, method: cutout, note: 猫の根付（招き猫の代わり。招き猫の古い図版は見つからなかった）}
+  - {material: netsuke_cat_bowl, method: cutout, note: 鉢の上の猫の根付}
