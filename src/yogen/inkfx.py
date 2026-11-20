@@ -116,7 +116,7 @@ def spray_stroke(size, paths, color, width: int = 14, seed: int = 5, scale: floa
     return spray(m, color, seed=seed, scale=scale, drips=.5)
 
 
-def xerox_grain(size, seed: int = 9, strength: float = 1.0) -> Image.Image:
+def xerox_grain(size, seed: int = 9, strength: float = 1.0, toner: float = 1.0) -> Image.Image:
     """画面全体に重ねる汚れ（RGBA）。"""
     rng = np.random.default_rng(seed)
     w, h = size
@@ -125,8 +125,8 @@ def xerox_grain(size, seed: int = 9, strength: float = 1.0) -> Image.Image:
     # トナーの粒：明るい点
     # まばらに、ところどころ固まって出る
     clump = _noise((h, w), 140, rng)
-    toner = (rng.random((h, w)) > .9993 - np.clip(clump - .7, 0, 1) * .006).astype(np.float32)
-    toner = np.asarray(Image.fromarray((toner * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(3))).astype(np.float32) / 255
+    toner_px = (rng.random((h, w)) > .9993 - np.clip(clump - .7, 0, 1) * .006).astype(np.float32)
+    toner_px = np.asarray(Image.fromarray((toner_px * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(3))).astype(np.float32) / 255
     # 縁の焼け
     yy, xx = np.mgrid[0:h, 0:w]
     vign = np.clip(((xx / w - .5) ** 2 * 1.6 + (yy / h - .46) ** 2 * 1.1) * 2.6 - .35, 0, 1) * 170 * strength
@@ -143,6 +143,6 @@ def xerox_grain(size, seed: int = 9, strength: float = 1.0) -> Image.Image:
     layer = Image.fromarray(out, "RGBA")
     light = np.zeros((h, w, 4), np.uint8)
     light[..., :3] = 225
-    light[..., 3] = (toner * 120).astype(np.uint8)
+    light[..., 3] = (toner_px * 120 * toner).astype(np.uint8)
     layer.alpha_composite(Image.fromarray(light, "RGBA"))
     return layer

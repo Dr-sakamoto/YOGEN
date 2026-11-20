@@ -100,7 +100,7 @@ def photocopy(mask: Image.Image, seed: int = 1, strength: float = 1.0, lowres: i
 
 
 def ink_bleed(mask: Image.Image, seed: int = 1, spread: float = .03, wobble: float = 1.0,
-              drips: float = .35, specks: float = .15) -> Image.Image:
+              drips: float = .35, specks: float = 0.0) -> Image.Image:
     """インクのにじみ（TRASH MACHINE）：紙に染みて字が太り、輪郭が場所ごとに不揃いに膨らむ。
 
     spread は字の高さに対するにじみ幅。場所ごとにその 0.4〜1.6 倍でばらつく。
