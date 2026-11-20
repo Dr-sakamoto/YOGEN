@@ -165,3 +165,11 @@ def test_ink_effects():
     s = spray(text_mask("LOOK", STENCIL, 80), (0, 0, 0))
     assert s.height > m.height  # 垂れと霧の分だけ大きい
     assert xerox_grain((60, 100)).size == (60, 100)
+
+
+def test_brand_marks():
+    from yogen.brand import logo_mask, wordmark_mask
+
+    assert wordmark_mask().getbbox() is not None
+    m = logo_mask()
+    assert m.width > m.height  # 妖幻の横組み

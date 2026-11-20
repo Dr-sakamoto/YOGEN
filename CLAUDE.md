@@ -21,3 +21,9 @@
 
 - `pip install -e ".[dev]"`、`pytest -q`（ffmpeg が必要）
 - CLI は `src/yogen/cli.py`。台本の書き方は `prompts/script_system.md`、設定は `config/channel.yaml`。
+
+## ブランド（決定）
+
+- ロゴは篆書の「妖幻」のみ。英字の題字は小文字「yōgen」で、藤黄の地に黒で使う。
+- どちらもピンボケ処理（`src/yogen/degrade.py` の `defocus`）。設定値と使い方は `src/yogen/brand.py`。
+  書き出し済みの画像は `assets/brand/`。
