@@ -151,6 +151,30 @@ def ink_bleed(mask: Image.Image, seed: int = 1, spread: float = .03, wobble: flo
     return out.filter(ImageFilter.GaussianBlur(.9)).point(lambda v: 255 if v > 120 else 0).filter(ImageFilter.GaussianBlur(.6))
 
 
+def grainy(mask: Image.Image, seed: int = 4, edge: float = .012, salt: float = .1, patch: float = .35,
+           grain_px: int = 2) -> Image.Image:
+    """インクの粒子感：輪郭をディザで溶かし、中に抜けの点、濃さのむら。外へ飛ぶ粒は作らない。
+
+    edge は輪郭のざらつく幅（字の高さに対する割合）。grain_px は粒の大きさ。
+    """
+    rng = _rng(seed)
+    h0 = mask.height
+    W, H = mask.size
+    gw, gh = max(2, W // grain_px), max(2, H // grain_px)
+    # 輪郭：少しぼかした値を、粒の大きさの乱数としきい値で比べる（ディザ）
+    soft = np.asarray(mask.filter(ImageFilter.GaussianBlur(max(1, edge * h0)))).astype(np.float32) / 255
+    noise = np.asarray(Image.fromarray((rng.random((gh, gw)) * 255).astype(np.uint8)).resize((W, H), Image.NEAREST)).astype(np.float32) / 255
+    ink = soft > (noise * .9 + .05)
+    # 中の抜け：濃さのむらが薄いところほど多く抜ける
+    p = _field((H, W), h0 * .25, rng)
+    noise2 = np.asarray(Image.fromarray((rng.random((gh, gw)) * 255).astype(np.uint8)).resize((W, H), Image.NEAREST)).astype(np.float32) / 255
+    holes = noise2 < salt * (1 + (1 - p) * patch * 3)
+    a = (ink & ~holes).astype(np.float32)
+    # 濃さのむら（白インクでも少し透ける）
+    a = a * (1 - patch * .35 + p * patch * .35)
+    return Image.fromarray(np.clip(a * 255, 0, 255).astype(np.uint8))
+
+
 def defocus(mask: Image.Image, seed: int = 2, radius: float = .05, skew: float = 1.0,
             ghost: tuple[float, float] = (.025, -.01), grain: float = .3) -> Image.Image:
     """radius・ghost は字の高さに対する割合。skew は右へ行くほどぼける度合い。"""
