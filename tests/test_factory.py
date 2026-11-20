@@ -45,6 +45,21 @@ def test_palette_from_pigments(tmp_path):
     assert text_on("#c4ab42") == SUMI and text_on("#2c4359") == GOFUN
 
 
+@pytest.mark.parametrize("shape", ["uroko", "hitodama", "medama"])
+def test_monyou_halftone_scales_with_tone(shape):
+    from yogen.halftone import monyou_halftone
+
+    im = Image.new("RGB", (200, 100), (255, 255, 255))
+    im.paste((0, 0, 0), (100, 0, 200, 100))  # 右半分が黒
+    out = monyou_halftone(im, shape=shape, cell=12, ink=(0, 0, 0), paper=(255, 255, 255))
+
+    def ink_ratio(box):
+        px = list(out.crop(box).convert("L").getdata())
+        return sum(1 for p in px if p < 128) / len(px)
+
+    assert ink_ratio((110, 10, 190, 90)) > ink_ratio((10, 10, 90, 90)) + 0.2
+
+
 def test_pronunciation_fix():
     assert speakable("Welcome to YŌGEN. yogen!") == "Welcome to Yoh-gen. Yoh-gen!"
 
