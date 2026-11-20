@@ -11,6 +11,20 @@ danjuro_skeleton:
   - skeleton
   title: 'Ichikawa Danjūrō V as a Skeleton, Spirit of the Renegade Monk Seigen, and Iwai Hanshirō IV as
     the Cherry Princess, in “Flower of Edo: An Ichikawa Saga” (Edo no Hana Mimasu Soga)'
+great_wave:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1830/33
+  id: '24645'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/24645
+  source: aic
+  tags:
+  - hokusai
+  - bero
+  title: Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series
+    "Thirty-Six Views of Mount Fuji (Fugaku sanjūrokkei)"
 hokusai_manga_2:
   artist: Katsushika Hokusai
   credit: The Metropolitan Museum of Art
@@ -136,6 +150,19 @@ oiwa:
   - ghost
   - lantern
   title: Oiwa (Oiwa-san), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+red_fuji:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: c. 1830/33
+  id: '87008'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/87008
+  source: aic
+  tags:
+  - hokusai
+  title: Shower Below the Summit (Sanka hakuu), from the series "Thirty-Six Views of Mount Fuji (Fugaku
+    sanjurokkei)"
 sarayashiki:
   artist: Katsushika Hokusai
   credit: Art Institute of Chicago
