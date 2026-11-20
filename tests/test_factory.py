@@ -1,0 +1,74 @@
+import shutil
+from pathlib import Path
+
+import pytest
+import yaml
+from PIL import Image
+
+from yogen import cli
+from yogen.models import Episode, Script, Status
+from yogen.render import build_ass, render_episode
+from yogen.tts import speakable
+from yogen.upload import build_body
+
+FIXTURES = Path(__file__).parent / "fixtures"
+
+
+def sample_script() -> Script:
+    return Script.model_validate(yaml.safe_load((FIXTURES / "sample_script.yaml").read_text()))
+
+
+def sample_episode(tmp_path: Path, **kw) -> Episode:
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (600, 900), (180, 160, 120)).save(assets / "main.jpg")
+    data = dict(
+        id="t", working_title="t", research_notes="n",
+        artworks=[{"key": "main", "source": "local", "local_path": "x", "width": 600, "height": 900}],
+    )
+    data.update(kw)
+    return Episode.model_validate(data)
+
+
+def test_pronunciation_fix():
+    assert speakable("Welcome to YŌGEN. yogen!") == "Welcome to Yoh-gen. Yoh-gen!"
+
+
+def test_upload_body_schedules_private():
+    ep = sample_episode(Path("/tmp/unused"), publish_at="2099-01-01")
+    body = build_body(ep, sample_script())
+    assert body["status"]["privacyStatus"] == "private"
+    assert body["status"]["publishAt"] == "2099-01-01T00:00:00Z"
+
+
+def test_ass_has_brand_and_captions(tmp_path):
+    s = sample_script()
+    out = tmp_path / "c.ass"
+    build_ass(s.beats, [2.0] * len(s.beats), out)
+    text = out.read_text()
+    assert "PlayResY: 1920" in text
+    assert text.count("Dialogue:") == len(s.beats) + 1
+
+
+def test_fact_check_gate(tmp_path, monkeypatch):
+    s = sample_script()
+    ep = sample_episode(tmp_path, status="scripted")
+    monkeypatch.setattr(cli, "load_episode", lambda _id: ep)
+    monkeypatch.setattr(cli, "load_script", lambda _id: s)
+    saved = []
+    monkeypatch.setattr(cli, "save_episode", saved.append)
+
+    with pytest.raises(SystemExit):
+        cli.main(["mark", "t", "fact_checked"])  # 未確認の事実が残っている
+
+    for c in s.claims:
+        c.verified = True
+    cli.main(["mark", "t", "fact_checked"])
+    assert saved[-1].status == Status.fact_checked
+
+
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg required")
+def test_render_silent(tmp_path):
+    ep = sample_episode(tmp_path)
+    out = render_episode(ep, sample_script(), tmp_path, tts_provider="silent")
+    assert out.exists() and out.stat().st_size > 10_000

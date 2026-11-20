@@ -1,0 +1,43 @@
+# Actions タブから回のIDを指定して実行 → Claudeが台本を下書きし、PRを作る。
+# 人はPR上で script.yaml を直し、claims を一次資料で確認して verified: true にする。
+name: Draft script
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "エピソードID（episodes/ のディレクトリ名）"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Generate script
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: yogen script "${{ inputs.episode }}" --force
+      - name: Open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EP: ${{ inputs.episode }}
+        run: |
+          branch="script/$EP"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add "episodes/$EP"
+          git commit -m "Draft script: $EP"
+          git push -f origin "$branch"
+          yogen check "$EP" > check.txt || true
+          gh pr create --base main --head "$branch" --title "台本: $EP" \
+            --body "$(printf 'Claudeが下書きした台本です。\n\n## 事実確認\n```\n%s\n```\n\n- [ ] script.yaml の claims をすべて一次資料で確認した\n- [ ] 試写動画（Artifacts の previews）を確認した\n' "$(cat check.txt)")" \
+            || echo "PR already exists"

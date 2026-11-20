@@ -1,0 +1,41 @@
+# approved になった回をレンダリングし、YouTubeに予約投稿する。
+# 公開は publish_at の日にYouTube側が行う（ここでは private + publishAt でアップロードするだけ）。
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths: ["episodes/**/episode.yaml"]
+  schedule:
+    - cron: "17 21 * * *"   # 毎日1回、取りこぼしを拾う
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - run: pip install -e .
+      - name: Upload approved episodes
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: yogen publish
+      - name: Record status
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add episodes
+          git diff --cached --quiet || (git commit -m "Mark scheduled episodes" && git push)

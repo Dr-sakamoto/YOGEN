@@ -1,0 +1,31 @@
+# テスト・試写用の手書き台本（Claudeの出力と同じ形）。内容は未確認。
+title: "Why does this woman's shadow look like a demon?"
+description: |
+  A samurai carries a beautiful stranger across a river. Then he looks down.
+
+  Tsukioka Yoshitoshi, "Omori Hikoshichi" from New Forms of the Thirty-Six Ghosts, 1889.
+  Art Institute of Chicago. Public domain (CC0).
+
+  YŌGEN — yoh-GEN (hard g). Phantoms of the floating world.
+tags: [ukiyo-e, yokai, yoshitoshi, japanese art, taiheiki, ghost]
+beats:
+  - role: hook
+    narration: "Look at her hand. Now look at the water."
+    caption: "Look at her hand."
+    shot: {artwork: main, focus_x: 0.5, focus_y: 0.515, zoom_start: 4.0, zoom_end: 3.2}
+  - role: story
+    narration: "A warrior named Omori Hikoshichi offers to carry a beautiful woman across the river. Halfway across, she becomes something else."
+    caption: "Halfway across, she changes."
+    shot: {artwork: main, focus_x: 0.37, focus_y: 0.375, zoom_start: 3.0, zoom_end: 2.2}
+  - role: wide
+    narration: "Tsukioka Yoshitoshi printed this in 1889, for his series New Forms of the Thirty-Six Ghosts."
+    caption: "Yoshitoshi, 1889"
+    shot: {artwork: main, focus_x: 0.45, focus_y: 0.5, zoom_start: 1.6, zoom_end: 1.0}
+  - role: landing
+    narration: "One theory is that she is the vengeful spirit of a fallen general. In Japan, the restless dead were feared, and honored."
+    caption: "The restless dead were feared, and honored."
+    shot: {artwork: main, focus_x: 0.39, focus_y: 0.9, zoom_start: 1.2, zoom_end: 2.4}
+claims:
+  - claim: "Yoshitoshi made this print in 1889 for New Forms of the Thirty-Six Ghosts"
+    basis: "AIC object 196862 metadata"
+    verified: false

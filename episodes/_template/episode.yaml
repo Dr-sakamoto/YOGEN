@@ -1,0 +1,18 @@
+id: _template
+status: draft
+working_title: "（仮タイトル）"
+artworks:
+  # source: met | aic | local
+  #   met / aic … object_id に美術館の作品ID。パブリックドメインでなければ取得が止まる
+  #   local     … local_path, license, is_public_domain: true を手で書く
+  - key: main
+    source: aic
+    object_id: "000000"
+research_notes: |
+  # ここに一次資料から調べた事実を書く。台本の事実はここからしか取らない。
+  # 伝承の内容、出典（巻・話数まで）、作品の制作年・シリーズ・版元、確立した学説など。
+sources:
+  - "（例）国際日本文化研究センター 怪異・妖怪伝承データベース：……"
+publish_at: null
+youtube_video_id: null
+review_notes: ""

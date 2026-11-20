@@ -1,0 +1,37 @@
+id: 0001-omori-hikoshichi
+status: draft
+working_title: The beautiful woman who turned into a demon on his back
+artworks:
+- key: main
+  source: aic
+  object_id: '196862'
+  local_path: null
+  title: Omori Hikoshichi from the series “New Forms of the Thirty-Six Ghosts”
+  artist: Tsukioka Yoshitoshi
+  date: '1889'
+  image_url: https://www.artic.edu/iiif/2/3c1ee175-c7f4-7fdd-d039-11dfb3ac9aa5/full/1557,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/196862
+  credit: Art Institute of Chicago, Bruce Goff Archive, gift of Shin'enkan, Inc.
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 1557
+  height: 2250
+research_notes: |
+  ※サンプル回。下の内容はパイプライン確認用の下書きで、まだ一次資料で確認していない。
+  　投稿前に必ず『太平記』本文と所蔵館の作品解説で照合すること。
+
+  - 作品：月岡芳年『新形三十六怪撰』のうち「大森彦七道に怪異に逢ふ図」。シリーズは1889年〜1892年刊。
+    この図の制作年は所蔵館（シカゴ美術館）の表示で1889年。
+  - 伝承の出典：『太平記』巻二十三「大森彦七事」。
+  - あらすじ：伊予の武士・大森彦七盛長が、猿楽の催しに向かう途中、川（または道）で美しい女に出会い、
+    頼まれて背負って運ぶ。途中で女が鬼の姿に変わり、彦七に襲いかかる。
+  - 女の正体：湊川の戦いで自害した楠木正成の怨霊とされる。彦七は湊川の戦いで正成を追い詰めた側の武士。
+  - 背景：戦で非業の死を遂げた者の霊が祟るという考えは、御霊信仰とつながる。
+  - 図の見どころ（画像を見た所見・要確認）：女は美しい顔のままだが、彦七の肩に掛かる手が鉤爪のように描かれている。
+    また足元の水面に落ちる影が、人ではない異形の形に見える。正体を絵の細部で暗示している可能性がある。
+sources:
+- 『太平記』巻二十三「大森彦七事」
+- Art Institute of Chicago, object 196862 作品ページ
+publish_at: null
+youtube_video_id: null
+review_notes: ''
