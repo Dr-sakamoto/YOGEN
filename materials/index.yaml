@@ -61,6 +61,19 @@ great_wave:
   - bero
   title: Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series
     "Thirty-Six Views of Mount Fuji (Fugaku sanjūrokkei)"
+heron_maiden:
+  artist: Tsukioka Yoshitoshi
+  credit: Art Institute of Chicago
+  date: '1889'
+  id: '196867'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/196867
+  source: aic
+  tags:
+  - sagi
+  - yoshitoshi
+  title: Heron Maiden from the series "New Forms of Thirty-Six Ghosts"
 hokusai_manga_2:
   artist: Katsushika Hokusai
   credit: The Metropolitan Museum of Art
