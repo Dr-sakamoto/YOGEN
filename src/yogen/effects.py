@@ -2,7 +2,7 @@
 
   chirashi    散らし：アイコンを大きさ・向き・色をばらして撒く
   sunago      金砂子：金箔の細片を撒く（屏風の技法）。キラキラの代わりの光り物
-  jimon       地紋：アイコンを敷き詰めた地の模様（青海波・梅・鱗…）
+  jimon       地紋：アイコンを敷き詰めた地の模様（金魚・達磨・髑髏…）
   surikasane  刷り重ね：同じ形を2色でずらして重ねる（版ズレ）
 """
 from __future__ import annotations
@@ -95,17 +95,17 @@ def sunago(
 
 def jimon(
     w: int, h: int,
-    name: str = "seigaiha",
+    name: str = "kingyo",
     cell: int = 64,
     color: RGB = BERO,
     ground: RGB | None = None,
     offset: bool = True,
     step_y: float | None = None,
 ) -> Image.Image:
-    """アイコンを敷き詰めた地紋。青海波は段を半分ずらして重ねると波になる。"""
+    """アイコンを敷き詰めた地紋。offset で段ごとに半分ずらす。"""
     out = Image.new("RGBA", (w, h), (*ground, 255) if ground else (0, 0, 0, 0))
     layer = _icon_layer(name, cell, color)
-    sy = int(step_y if step_y else (cell * .32 if name == "seigaiha" else cell))
+    sy = int(step_y if step_y else cell)
     row = 0
     y = -cell
     while y < h + cell:

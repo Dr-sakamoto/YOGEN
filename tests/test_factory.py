@@ -80,7 +80,7 @@ def test_effects_produce_layers():
     assert layer.getchannel("A").getpixel((100, 150)) == 0  # 避けた円の中心は空いている
     assert layer.getbbox() is not None
     assert sunago(100, 100, density=.01).getbbox() is not None
-    assert jimon(120, 80, "ume", 30, ground=(0, 0, 0)).size == (120, 80)
+    assert jimon(120, 80, "kingyo", 30, ground=(0, 0, 0)).size == (120, 80)
     assert surikasane(png("fuji", 40), dx=4, dy=-3).size == (44, 43)
 
 
