@@ -60,6 +60,30 @@ def test_monyou_halftone_scales_with_tone(shape):
     assert ink_ratio((110, 10, 190, 90)) > ink_ratio((10, 10, 90, 90)) + 0.2
 
 
+def test_icons_render_with_cutouts():
+    from yogen.icons import ICONS, stamp, svg
+
+    for name in ICONS:
+        m = stamp(name, 64)
+        ink = sum(1 for v in m.getdata() if v > 128) / (64 * 64)
+        assert 0.05 < ink < 0.9, name  # 空でも塗りつぶしでもない
+        assert "<mask" in svg(name)
+    # 達磨は顔が切り抜かれている（中心より少し上は地）
+    assert stamp("daruma", 100).getpixel((50, 40)) < 128
+
+
+def test_effects_produce_layers():
+    from yogen.effects import chirashi, jimon, sunago, surikasane
+    from yogen.icons import png
+
+    layer = chirashi(200, 300, count=20, seed=1, avoid=(.5, .5, .2))
+    assert layer.getchannel("A").getpixel((100, 150)) == 0  # 避けた円の中心は空いている
+    assert layer.getbbox() is not None
+    assert sunago(100, 100, density=.01).getbbox() is not None
+    assert jimon(120, 80, "ume", 30, ground=(0, 0, 0)).size == (120, 80)
+    assert surikasane(png("fuji", 40), dx=4, dy=-3).size == (44, 43)
+
+
 def test_pronunciation_fix():
     assert speakable("Welcome to YŌGEN. yogen!") == "Welcome to Yoh-gen. Yoh-gen!"
 

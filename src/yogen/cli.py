@@ -125,6 +125,16 @@ def cmd_status(a):
         print(f"  {ep.status.value:13} {ep.publish_at or '-':10}  {ep.id}  {ep.working_title}")
 
 
+def cmd_icons(a):
+    from pathlib import Path
+
+    from .config import ROOT
+    from .icons import export
+
+    paths = export(Path(a.dest) if a.dest else ROOT / "assets" / "icons")
+    print(f"{len(paths)} 個のアイコンを書き出しました（SVG と 512px の PNG）")
+
+
 def cmd_auth(a):
     from .upload import run_oauth_flow
 
@@ -143,6 +153,7 @@ def main(argv=None):
     s = sub.add_parser("render"); s.add_argument("id"); s.add_argument("--tts", choices=["silent", "elevenlabs"]); s.set_defaults(f=cmd_render)
     s = sub.add_parser("publish"); s.add_argument("--id"); s.add_argument("--dry-run", action="store_true"); s.set_defaults(f=cmd_publish)
     s = sub.add_parser("status"); s.set_defaults(f=cmd_status)
+    s = sub.add_parser("icons"); s.add_argument("--dest"); s.set_defaults(f=cmd_icons)
     s = sub.add_parser("auth"); s.add_argument("client_secret"); s.set_defaults(f=cmd_auth)
 
     a = p.parse_args(argv)

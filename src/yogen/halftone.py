@@ -79,6 +79,8 @@ def monyou_halftone(
 ) -> Image.Image:
     """src を文様の網点に変換する。paper を指定しなければ透明の地。
 
+    shape は uroko / hitodama / medama か、icons.py のアイコン名（daruma, kingyo …）。
+
     invert=True は暗い地に明るいインクで刷るとき：明るいところほど図形を大きくする。
     図形は網の目より大きくならないので、隣とつながって線にならない。
     """
@@ -87,8 +89,17 @@ def monyou_halftone(
     w, h = g.size
     out = Image.new("RGBA", (w * SS, h * SS), (*paper, 255) if paper else (0, 0, 0, 0))
     d = ImageDraw.Draw(out)
-    draw = SHAPES[shape]
     color = (*ink, 255)
+    if shape in SHAPES:
+        draw = SHAPES[shape]
+    else:
+        # icons.py のアイコンも図形にできる
+        from .icons import stamp as _stamp
+
+        def draw(d, cx, cy, s, color, row, gap):
+            size = max(2, int(s))
+            m = _stamp(shape, size)
+            out.paste(Image.new("RGBA", (size, size), color), (int(cx - size / 2), int(cy - size / 2)), m)
     gap = (*paper, 255) if paper else (0, 0, 0, 0)
     row = 0
     y = cell / 2
