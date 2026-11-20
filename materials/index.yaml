@@ -1,0 +1,323 @@
+danjuro_skeleton:
+  artist: Katsukawa Shunsho
+  credit: Art Institute of Chicago
+  date: c.1783
+  id: '88304'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/88304
+  source: aic
+  tags:
+  - skeleton
+  title: 'Ichikawa Danjūrō V as a Skeleton, Spirit of the Renegade Monk Seigen, and Iwai Hanshirō IV as
+    the Cherry Princess, in “Flower of Edo: An Ichikawa Saga” (Edo no Hana Mimasu Soga)'
+daruma_painting:
+  artist: null
+  credit: Art Institute of Chicago
+  date: c. 1550
+  id: '117201'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/117201
+  source: aic
+  tags:
+  - daruma
+  title: Daruma
+goldfish_inro:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 18th–19th century
+  id: '58887'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/58887
+  source: met
+  tags:
+  - kingyo
+  title: Case (Inrō) with Design of Goldfish and Reed with Wave Pattern
+goldfish_painting:
+  artist: Watanabe Seitei
+  credit: The Metropolitan Museum of Art
+  date: ca. 1887
+  id: '54739'
+  kind: print
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/54739
+  source: met
+  tags:
+  - kingyo
+  title: Goldfish
+great_wave:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1830/33
+  id: '24645'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/24645
+  source: aic
+  tags:
+  - hokusai
+  - bero
+  title: Under the Wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave, from the series
+    "Thirty-Six Views of Mount Fuji (Fugaku sanjūrokkei)"
+hokusai_manga_2:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: ''
+  id: '57683'
+  kind: ink
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/57683
+  source: met
+  tags:
+  - hokusai
+  title: 'Transmitting the Spirit, Revealing the Form of Things: Hokusai Sketchbooks, volume 6 (Denshin
+    kaishu: Hokusai manga, rokuhen)'
+hokusai_manga_3:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: '1819'
+  id: '57684'
+  kind: ink
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/57684
+  source: met
+  tags:
+  - hokusai
+  title: 'Transmitting the Spirit, Revealing the Form of Things: Hokusai Sketchbooks, volume 7 (Denshin
+    kaishu: Hokusai manga, nanahen)'
+kesa_793:
+  artist: null
+  credit: Art Institute of Chicago
+  date: late Edo period (1789–1868), early 19th century
+  id: '793'
+  kind: textile
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/793
+  source: aic
+  tags:
+  - textile
+  title: Kesa
+kesa_795:
+  artist: null
+  credit: Art Institute of Chicago
+  date: Edo period (1615–1868), 18th century
+  id: '795'
+  kind: textile
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/795
+  source: aic
+  tags:
+  - textile
+  title: Kesa
+koheiji:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47398'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47398
+  source: aic
+  tags:
+  - ghost
+  - skeleton
+  title: Kohada Koheiji, from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+netsuke_cat:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59775'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59775
+  source: met
+  tags:
+  - neko
+  title: Netsuke of Cat
+netsuke_cat_bowl:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59248'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59248
+  source: met
+  tags:
+  - neko
+  title: Netsuke of Cat Lying on a Bowl, underneath which is a Fish
+netsuke_daruma:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59205'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59205
+  source: met
+  tags:
+  - daruma
+  title: Netsuke of Daruma
+netsuke_fox:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '60375'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/60375
+  source: met
+  tags:
+  - kitsune
+  title: Netsuke of Fox
+netsuke_oni:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59867'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59867
+  source: met
+  tags:
+  - oni
+  title: Netsuke of Demon
+netsuke_oni_mask:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59710'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59710
+  source: met
+  tags:
+  - oni
+  title: 'Netsuke of Noh Mask: Ōni'
+netsuke_oni_red:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59974'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59974
+  source: met
+  tags:
+  - oni
+  title: Netsuke of Demon
+netsuke_skeleton_drum:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59322'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59322
+  source: met
+  tags:
+  - skeleton
+  title: Netsuke of Skeleton with a Drum
+netsuke_skull:
+  artist: Rantei
+  credit: The Metropolitan Museum of Art
+  date: late 18th–early 19th century
+  id: '59171'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59171
+  source: met
+  tags:
+  - skeleton
+  - skull
+  title: Skeleton Astride a Skull
+netsuke_skull_small:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '60216'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/60216
+  source: met
+  tags:
+  - dokuro
+  title: Netsuke of Skull
+oiwa:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47403'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47403
+  source: aic
+  tags:
+  - ghost
+  - lantern
+  title: Oiwa (Oiwa-san), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+red_fuji:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: c. 1830/33
+  id: '87008'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/87008
+  source: aic
+  tags:
+  - hokusai
+  title: Shower Below the Summit (Sanka hakuu), from the series "Thirty-Six Views of Mount Fuji (Fugaku
+    sanjurokkei)"
+red_fuji_met:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: ca. 1830–32
+  id: '55736'
+  kind: print
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/55736
+  source: met
+  tags:
+  - fuji
+  title: South Wind, Clear Sky (Gaifū kaisei), also known as Red Fuji, from the series Thirty-six Views
+    of Mount Fuji (Fugaku sanjūrokkei)
+sarayashiki:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47407'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47407
+  source: aic
+  tags:
+  - ghost
+  title: The Mansion of the Plates (Sara yashiki), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+shoki_masanobu:
+  artist: Okumura Masanobu
+  credit: Art Institute of Chicago
+  date: c. 1745
+  id: '44343'
+  kind: ink
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/44343
+  source: aic
+  tags:
+  - shoki
+  - oni
+  title: Shoki, the Demon Queller
+shoki_sword:
+  artist: Okumura Masanobu
+  credit: Art Institute of Chicago
+  date: c. 1725
+  id: '44164'
+  kind: ink
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/44164
+  source: aic
+  tags:
+  - shoki
+  title: Shoki the Demon Queller Sharpening His Sword
