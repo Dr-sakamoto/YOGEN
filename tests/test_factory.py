@@ -136,3 +136,32 @@ def test_render_silent(tmp_path):
     ep = sample_episode(tmp_path)
     out = render_episode(ep, sample_script(), tmp_path, tts_provider="silent")
     assert out.exists() and out.stat().st_size > 10_000
+
+
+def test_material_processing():
+    from PIL import ImageDraw
+
+    from yogen.materials import cutout, torn, xerox
+
+    # 灰色のグラデーションの背景に置いた赤い物を切り抜けるか
+    im = Image.new("RGB", (200, 200))
+    d = ImageDraw.Draw(im)
+    for y in range(200):
+        d.line((0, y, 199, y), fill=(240 - y // 3,) * 3)
+    d.ellipse((60, 60, 140, 140), fill=(180, 40, 40))
+    c = cutout(im)
+    assert c.getchannel("A").getpixel((c.width // 2, c.height // 2)) == 255
+    assert c.width < 120
+    x = xerox(im, paper=(0, 255, 0))
+    assert x.getpixel((100, 100))[:3] != (0, 255, 0)  # 赤い円はインクになる
+    assert torn(im, 8).getchannel("A").getpixel((0, 0)) == 0
+
+
+def test_ink_effects():
+    from yogen.inkfx import STENCIL, WIDE_BLACK, screen_print, spray, text_mask, xerox_grain
+
+    m = text_mask("YŌGEN", WIDE_BLACK, 80)
+    assert screen_print(m, (232, 179, 38)).getbbox() is not None
+    s = spray(text_mask("LOOK", STENCIL, 80), (0, 0, 0))
+    assert s.height > m.height  # 垂れと霧の分だけ大きい
+    assert xerox_grain((60, 100)).size == (60, 100)

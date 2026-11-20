@@ -9,3 +9,6 @@ token*.json
 # 生成物（Actionsで毎回作り直す）
 episodes/*/assets/
 episodes/*/build/
+
+# 切り貼りの素材画像（index.yaml に出典を記録し、画像は取り直す）
+materials/*.jpg

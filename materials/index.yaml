@@ -1,0 +1,175 @@
+danjuro_skeleton:
+  artist: Katsukawa Shunsho
+  credit: Art Institute of Chicago
+  date: c.1783
+  id: '88304'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/88304
+  source: aic
+  tags:
+  - skeleton
+  title: 'Ichikawa Danjūrō V as a Skeleton, Spirit of the Renegade Monk Seigen, and Iwai Hanshirō IV as
+    the Cherry Princess, in “Flower of Edo: An Ichikawa Saga” (Edo no Hana Mimasu Soga)'
+hokusai_manga_2:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: ''
+  id: '57683'
+  kind: ink
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/57683
+  source: met
+  tags:
+  - hokusai
+  title: 'Transmitting the Spirit, Revealing the Form of Things: Hokusai Sketchbooks, volume 6 (Denshin
+    kaishu: Hokusai manga, rokuhen)'
+hokusai_manga_3:
+  artist: Katsushika Hokusai
+  credit: The Metropolitan Museum of Art
+  date: '1819'
+  id: '57684'
+  kind: ink
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/57684
+  source: met
+  tags:
+  - hokusai
+  title: 'Transmitting the Spirit, Revealing the Form of Things: Hokusai Sketchbooks, volume 7 (Denshin
+    kaishu: Hokusai manga, nanahen)'
+kesa_793:
+  artist: null
+  credit: Art Institute of Chicago
+  date: late Edo period (1789–1868), early 19th century
+  id: '793'
+  kind: textile
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/793
+  source: aic
+  tags:
+  - textile
+  title: Kesa
+kesa_795:
+  artist: null
+  credit: Art Institute of Chicago
+  date: Edo period (1615–1868), 18th century
+  id: '795'
+  kind: textile
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/795
+  source: aic
+  tags:
+  - textile
+  title: Kesa
+koheiji:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47398'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47398
+  source: aic
+  tags:
+  - ghost
+  - skeleton
+  title: Kohada Koheiji, from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+netsuke_oni:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59867'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59867
+  source: met
+  tags:
+  - oni
+  title: Netsuke of Demon
+netsuke_oni_red:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59974'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59974
+  source: met
+  tags:
+  - oni
+  title: Netsuke of Demon
+netsuke_skeleton_drum:
+  artist: null
+  credit: The Metropolitan Museum of Art
+  date: 19th century
+  id: '59322'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59322
+  source: met
+  tags:
+  - skeleton
+  title: Netsuke of Skeleton with a Drum
+netsuke_skull:
+  artist: Rantei
+  credit: The Metropolitan Museum of Art
+  date: late 18th–early 19th century
+  id: '59171'
+  kind: object
+  license: CC0 (Met Open Access)
+  page_url: https://www.metmuseum.org/art/collection/search/59171
+  source: met
+  tags:
+  - skeleton
+  - skull
+  title: Skeleton Astride a Skull
+oiwa:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47403'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47403
+  source: aic
+  tags:
+  - ghost
+  - lantern
+  title: Oiwa (Oiwa-san), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+sarayashiki:
+  artist: Katsushika Hokusai
+  credit: Art Institute of Chicago
+  date: 1831-32
+  id: '47407'
+  kind: print
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/47407
+  source: aic
+  tags:
+  - ghost
+  title: The Mansion of the Plates (Sara yashiki), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+shoki_masanobu:
+  artist: Okumura Masanobu
+  credit: Art Institute of Chicago
+  date: c. 1745
+  id: '44343'
+  kind: ink
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/44343
+  source: aic
+  tags:
+  - shoki
+  - oni
+  title: Shoki, the Demon Queller
+shoki_sword:
+  artist: Okumura Masanobu
+  credit: Art Institute of Chicago
+  date: c. 1725
+  id: '44164'
+  kind: ink
+  license: CC0 (Art Institute of Chicago)
+  page_url: https://www.artic.edu/artworks/44164
+  source: aic
+  tags:
+  - shoki
+  title: Shoki the Demon Queller Sharpening His Sword

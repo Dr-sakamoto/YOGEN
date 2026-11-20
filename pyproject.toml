@@ -12,6 +12,7 @@ dependencies = [
   "google-api-python-client>=2.130",
   "google-auth>=2.29",
   "fonttools>=4.50",
+  "numpy>=1.26",
 ]
 
 [project.optional-dependencies]
