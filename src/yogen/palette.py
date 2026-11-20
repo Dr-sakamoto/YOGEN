@@ -1,17 +1,14 @@
-"""YŌGEN のカラーパレット（毒々しい色）。
+"""YŌGEN のカラーパレット：洋紅・紫・ベロ藍・藤黄・墨・胡粉の6色。
 
-浮世絵の色には合わせない。地は墨で、差し色は1〜3色をその回ごとに選ぶ（作品の色とは無関係）。
-主役の作品だけ原画の色で見せ、背景や脇の紙片は差し色の2色刷りにして画面の大半を塗る。
+  sumi   墨      地
+  yoko   洋紅    差し色（明治の化学染料の赤）
+  mura   紫      差し色（明治の化学染料の紫）
+  bero   ベロ藍  差し色（プルシアンブルー）
+  too    藤黄    差し色。英字の題字の地
+  gofun  胡粉    字幕の文字、墨の地の上の網点
 
-  sumi    墨        地
-  pink    毒ピンク  一番の主役
-  green   毒緑
-  blue    電気青
-  purple  毒紫
-  yellow  毒黄      英字の題字の地だけ
-  white   紙        字幕の文字
-
-回ごとの差し色は episode.yaml の colors: [pink] や [green, purple] で選ぶ。書かなければ DEFAULT。
+地は墨、差し色は洋紅・紫・ベロ藍・藤黄から1〜3色をその回ごとに選ぶ（episode.yaml の colors）。
+切り抜いた素材（stickers.py）には色を付けず、網点にして色面に重ねる。
 """
 from __future__ import annotations
 
@@ -26,18 +23,22 @@ class Color:
     name: str
     hex: str
 
+    @property
+    def rgb(self) -> tuple[int, int, int]:
+        h = self.hex.lstrip("#")
+        return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
 
 PALETTE: dict[str, Color] = {c.key: c for c in [
-    Color("sumi", "墨", "#0d0d10"),
-    Color("pink", "毒ピンク", "#ff1f8e"),
-    Color("green", "毒緑", "#2ee86a"),
-    Color("blue", "電気青", "#2338ff"),
-    Color("purple", "毒紫", "#8c1fe0"),
-    Color("yellow", "毒黄", "#ffd60a"),
-    Color("white", "紙", "#f4f2ec"),
+    Color("sumi", "墨", "#16130f"),
+    Color("yoko", "洋紅", "#c8174f"),
+    Color("mura", "紫", "#5d2a8c"),
+    Color("bero", "ベロ藍", "#1f3d73"),
+    Color("too", "藤黄", "#e8b326"),
+    Color("gofun", "胡粉", "#eeefeb"),
 ]}
-ACCENTS = ("pink", "green", "blue", "purple")
-DEFAULT = ["pink"]
+ACCENTS = ("yoko", "mura", "bero", "too")
+DEFAULT = ["yoko"]
 MAX_ACCENTS = 3
 
 
@@ -65,6 +66,6 @@ def contrast(a: str, b: str) -> float:
 
 
 def text_on(bg: str) -> str:
-    """地の色の上で読める文字の色（紙の白か墨）。"""
-    white, sumi = PALETTE["white"].hex, PALETTE["sumi"].hex
+    """地の色の上で読める文字・網点の色（胡粉か墨）。"""
+    white, sumi = PALETTE["gofun"].hex, PALETTE["sumi"].hex
     return white if contrast(bg, white) >= contrast(bg, sumi) else sumi

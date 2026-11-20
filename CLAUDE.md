@@ -27,6 +27,7 @@
 - ロゴは篆書の「妖幻」のみ。英字の題字は小文字「yōgen」で、藤黄の地に黒で使う。
 - どちらもピンボケ処理（`src/yogen/degrade.py` の `defocus`）。設定値と使い方は `src/yogen/brand.py`。
   書き出し済みの画像は `assets/brand/`。
-- 色：毒々しいパレット（`src/yogen/palette.py`）。浮世絵の色には合わせない。地は墨、差し色は
-  毒ピンク・毒緑・電気青・毒紫から1〜3色をその回ごとに選ぶ（episode.yaml の `colors`）。毒黄は英字の題字の地だけ。
-  主役の作品は原画の色のまま、背景や脇の紙片は差し色の2色刷り。
+- 色：洋紅・紫・ベロ藍・藤黄・墨・胡粉の6色（`src/yogen/palette.py`）。地は墨、差し色は洋紅・紫・ベロ藍・藤黄から
+  1〜3色をその回ごとに選ぶ（episode.yaml の `colors`）。藤黄は英字の題字の地にも使う。
+- 切り抜いた素材（`src/yogen/stickers.py`、レシピは `materials/stickers.yaml`）には色を付けない。
+  網点（`halftone_sticker`）にして色面に重ねる。墨の地では胡粉の点、色の地では墨の点。主役の作品だけ原画の色。

@@ -2,7 +2,8 @@
 
 自作のアイコン（icons.py）の代わりに、本物のパブリックドメインの図版から切り出したものを貼る。
   sticker(key)              原画の色のまま（method: cutout / key / torn）
-  sticker(key, ink=..., paper=...)  2色刷り（墨＋差し色）
+  sticker(key, ink=..., paper=...)  2色刷り
+  halftone_sticker(key, ink)        色を付けない網点（透明の地にインク1色の点）。色面に重ねて馴染ませる
 """
 from __future__ import annotations
 
@@ -59,3 +60,22 @@ def sticker(key: str, index: int = 0, ink=None, paper=None) -> Image.Image:
     out = duotone(base.convert("RGB"), ink, paper)
     out.putalpha(base.getchannel("A"))
     return out
+
+
+def halftone_sticker(key: str, index: int = 0, ink=(22, 19, 15), cell: int = 9, width: int = 900,
+                     invert: bool = False) -> Image.Image:
+    """網点にしたステッカー。点の大きさで濃淡を出し、地は透明。
+
+    ink が明るい色（胡粉など）のときは invert=True：明るいところほど点を大きくする。
+    """
+    from PIL import ImageChops
+
+    from .halftone import monyou_halftone
+
+    base = _base(key, index)
+    base = base.resize((width, int(base.height * width / base.width)), Image.LANCZOS)
+    rgb = Image.new("RGB", base.size, (255, 255, 255))
+    rgb.paste(base, (0, 0), base)
+    dots = monyou_halftone(rgb, shape="dot", cell=cell, ink=ink, paper=None, invert=invert, min_size=.06)
+    dots.putalpha(ImageChops.multiply(dots.getchannel("A"), base.getchannel("A")))
+    return dots

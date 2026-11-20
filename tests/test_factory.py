@@ -35,13 +35,13 @@ def test_palette_for_episode():
 
     from yogen.palette import PALETTE, for_episode, text_on
 
-    cols = for_episode(SimpleNamespace(colors=["green", "purple"]))
-    assert [c.key for c in cols] == ["sumi", "green", "purple"]
-    assert [c.key for c in for_episode(SimpleNamespace(colors=None))] == ["sumi", "pink"]
+    cols = for_episode(SimpleNamespace(colors=["yoko", "mura"]))
+    assert [c.key for c in cols] == ["sumi", "yoko", "mura"]
+    assert [c.key for c in for_episode(SimpleNamespace(colors=None))] == ["sumi", "yoko"]
     with pytest.raises(ValueError):
-        for_episode(SimpleNamespace(colors=["yellow"]))  # 毒黄は題字の地だけ
-    assert text_on(PALETTE["blue"].hex) == PALETTE["white"].hex
-    assert text_on(PALETTE["green"].hex) == PALETTE["sumi"].hex
+        for_episode(SimpleNamespace(colors=["pink"]))
+    assert text_on(PALETTE["bero"].hex) == PALETTE["gofun"].hex
+    assert text_on(PALETTE["too"].hex) == PALETTE["sumi"].hex
 
 
 @pytest.mark.parametrize("shape", ["uroko", "hitodama", "medama"])

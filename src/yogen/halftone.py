@@ -64,7 +64,12 @@ def _medama(d: ImageDraw.ImageDraw, cx, cy, s, color, row, gap=(0, 0, 0, 0)):
         d.ellipse((cx - pp, cy - pp, cx + pp, cy + pp), fill=color)
 
 
-SHAPES = {"uroko": _uroko, "hitodama": _hitodama, "medama": _medama}
+def _dot(d: ImageDraw.ImageDraw, cx, cy, s, color, row, gap=None):
+    r = s / 2
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=color)
+
+
+SHAPES = {"dot": _dot, "uroko": _uroko, "hitodama": _hitodama, "medama": _medama}
 
 
 def monyou_halftone(
