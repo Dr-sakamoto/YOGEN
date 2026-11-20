@@ -100,7 +100,7 @@ def photocopy(mask: Image.Image, seed: int = 1, strength: float = 1.0, lowres: i
 
 
 def ink_bleed(mask: Image.Image, seed: int = 1, spread: float = .03, wobble: float = 1.0,
-              drips: float = .35, specks: float = 0.0) -> Image.Image:
+              drips: float = .35, specks: float = 0.0, lump: float = 1.0, lowres: int = 110) -> Image.Image:
     """インクのにじみ（TRASH MACHINE）：紙に染みて字が太り、輪郭が場所ごとに不揃いに膨らむ。
 
     spread は字の高さに対するにじみ幅。場所ごとにその 0.4〜1.6 倍でばらつく。
@@ -121,8 +121,8 @@ def ink_bleed(mask: Image.Image, seed: int = 1, spread: float = .03, wobble: flo
     yy, xx = np.arange(H)[:, None], np.arange(W)[None, :]
     a = stack[i0, yy, xx] * (1 - t) + stack[i0 + 1, yy, xx] * t
     # 2) 紙の繊維に沿った不揃い：中くらいのこぶと細かいけば
-    a = a + (_field((H, W), h0 * .06, rng) - .5) * .22 * wobble
-    a = a + (_field((H, W), h0 * .02, rng) - .5) * .07 * wobble
+    a = a + (_field((H, W), h0 * .06 * lump, rng) - .5) * .22 * wobble
+    a = a + (_field((H, W), h0 * .02 * lump, rng) - .5) * .07 * wobble
     # 3) 少し低めのしきい値で太らせる（角が丸く、狭いところが少し埋まる）
     ink = a > .40
     # 4) 下端から短い垂れ（にじみが溜まって落ちた程度）
@@ -137,7 +137,7 @@ def ink_bleed(mask: Image.Image, seed: int = 1, spread: float = .03, wobble: flo
         wd = max(4, int(r.uniform(.03, .07) * h0))
         d.ellipse((x - wd / 2, y0 - wd * .3, x + wd / 2, y0 + L), fill=255)
     # 5) 拡大コピーのわずかなギザギザと、トナーの抜け・外の粒
-    k = 110 / h0
+    k = lowres / h0
     sm = img.resize((max(8, int(W * k)), max(8, int(H * k))), Image.BILINEAR)
     img = sm.resize((W, H), Image.BILINEAR)
     a = np.asarray(img).astype(np.float32) / 255
