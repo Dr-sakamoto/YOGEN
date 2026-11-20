@@ -30,6 +30,21 @@ def sample_episode(tmp_path: Path, **kw) -> Episode:
     return Episode.model_validate(data)
 
 
+def test_palette_from_pigments(tmp_path):
+    from yogen.palette import GOFUN, SUMI, extract, text_on
+
+    im = Image.new("RGB", (300, 300), (215, 204, 171))  # 紙の地
+    im.paste((60, 90, 140), (0, 0, 300, 90))            # 藍
+    im.paste((170, 60, 55), (100, 150, 200, 250))       # 紅
+    im.save(tmp_path / "p.jpg")
+    pal = extract(tmp_path / "p.jpg")
+    r, g, b = (int(pal.shu[i:i + 2], 16) for i in (1, 3, 5))
+    assert b > r  # 主色は藍から
+    r, g, b = (int(pal.sashi[i:i + 2], 16) for i in (1, 3, 5))
+    assert r > b  # 差し色は紅から
+    assert text_on("#c4ab42") == SUMI and text_on("#2c4359") == GOFUN
+
+
 def test_pronunciation_fix():
     assert speakable("Welcome to YŌGEN. yogen!") == "Welcome to Yoh-gen. Yoh-gen!"
 
