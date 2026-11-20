@@ -176,7 +176,7 @@ def grainy(mask: Image.Image, seed: int = 4, edge: float = .012, salt: float = .
 
 
 def defocus(mask: Image.Image, seed: int = 2, radius: float = .05, skew: float = 1.0,
-            ghost: tuple[float, float] = (.025, -.01), grain: float = .3) -> Image.Image:
+            ghost: tuple[float, float] = (.025, -.01), grain: float = .3, dust: bool = False) -> Image.Image:
     """radius・ghost は字の高さに対する割合。skew は右へ行くほどぼける度合い。"""
     rng = _rng(seed)
     h0 = mask.height
@@ -206,6 +206,8 @@ def defocus(mask: Image.Image, seed: int = 2, radius: float = .05, skew: float =
     # 境目の粒子
     edge = a * (1 - a) * 4
     a = np.clip(a + rng.normal(0, grain, a.shape) * edge, 0, 1)
+    if not dust:
+        return Image.fromarray((a * 255).astype(np.uint8))
     # ほこり：芯の中の白い点、外の黒い点
     dust_in = (rng.random(a.shape) > .9985) & (a > .8)
     dust_out = (rng.random(a.shape) > .99965) & (a < .1)
