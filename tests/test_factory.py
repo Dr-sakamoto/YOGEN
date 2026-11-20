@@ -84,6 +84,16 @@ def test_effects_produce_layers():
     assert surikasane(png("fuji", 40), dx=4, dy=-3).size == (44, 43)
 
 
+def test_reisho_text_to_shapes():
+    from yogen.calligraphy import glyph_paths, image
+
+    d, w, h = glyph_paths("妖幻")
+    assert d and (w, h) == (2000, 1000)
+    d, w, h = glyph_paths("大森彦七", vertical=True)
+    assert (w, h) == (1000, 4000)
+    assert image("極", 64).getbbox() is not None
+
+
 def test_pronunciation_fix():
     assert speakable("Welcome to YŌGEN. yogen!") == "Welcome to Yoh-gen. Yoh-gen!"
 
