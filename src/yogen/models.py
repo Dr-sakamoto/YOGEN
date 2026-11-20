@@ -54,8 +54,8 @@ class Episode(BaseModel):
     research_notes: str = Field(description="人が一次資料から書いたメモ。台本の事実はここからだけ取る")
     sources: list[str] = Field(default_factory=list, description="伝承・解説の出典")
     publish_at: str | None = Field(default=None, description="予約公開日 YYYY-MM-DD")
-    palette: dict[str, str] | None = Field(
-        default=None, description="作品から自動で取った色を上書きするとき {shu: '#..', sashi: '#..'}"
+    colors: list[str] | None = Field(
+        default=None, description="その回の4色（墨は固定）を手で選ぶとき。palette.py のキー（bero, yoko …）"
     )
     youtube_video_id: str | None = None
     review_notes: str = ""

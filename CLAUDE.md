@@ -27,3 +27,5 @@
 - ロゴは篆書の「妖幻」のみ。英字の題字は小文字「yōgen」で、藤黄の地に黒で使う。
 - どちらもピンボケ処理（`src/yogen/degrade.py` の `defocus`）。設定値と使い方は `src/yogen/brand.py`。
   書き出し済みの画像は `assets/brand/`。
+- 色：浮世絵の顔料から作った混成パレット（12色＋紙の白、`src/yogen/palette.py`）。1本で使うのは5色だけで、
+  墨は固定、残り4色はその回の浮世絵から自動で選ぶ（`pick`）。手で選ぶときは episode.yaml の `colors`。
