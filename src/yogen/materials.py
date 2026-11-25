@@ -12,7 +12,6 @@
 from __future__ import annotations
 
 import io
-import random
 from pathlib import Path
 
 import numpy as np
@@ -200,33 +199,6 @@ def xerox(img: Image.Image, ink=(22, 19, 15), paper=None, thresh: float = .55, g
 def duotone(img: Image.Image, ink, paper) -> Image.Image:
     g = ImageOps.autocontrast(ImageOps.grayscale(img), cutoff=1)
     return ImageOps.colorize(g, black=ink, white=paper).convert("RGBA")
-
-
-def torn(img: Image.Image, amp: int = 10, seed: int = 3, paper=None, paper_w: int = 0) -> Image.Image:
-    """ちぎった縁。paper を指定すると、縁に紙の白い耳を残す。"""
-    r = random.Random(seed)
-    w, h = img.size
-    pts = []
-    step = max(8, min(w, h) // 30)
-    for x in range(0, w + step, step):
-        pts.append((min(x, w), r.uniform(0, amp)))
-    for y in range(0, h + step, step):
-        pts.append((w - r.uniform(0, amp), min(y, h)))
-    for x in range(w, -step, -step):
-        pts.append((max(x, 0), h - r.uniform(0, amp)))
-    for y in range(h, -step, -step):
-        pts.append((r.uniform(0, amp), max(y, 0)))
-    m = Image.new("L", (w, h), 0)
-    ImageDraw.Draw(m).polygon(pts, fill=255)
-    base = img.convert("RGBA")
-    if paper:
-        inner = m.filter(ImageFilter.MinFilter(paper_w * 2 + 1))
-        bg = Image.new("RGBA", (w, h), (*paper, 255))
-        bg.paste(base, (0, 0), inner)
-        base = bg
-    a = ImageChops.multiply(base.getchannel("A"), m)
-    base.putalpha(a)
-    return base
 
 
 def place(canvas: Image.Image, layer: Image.Image, xy, scale: float = 1.0, angle: float = 0, shadow: float = .45):

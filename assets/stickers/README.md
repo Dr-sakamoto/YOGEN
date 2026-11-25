@@ -5,5 +5,5 @@
 
 元の図版はすべて美術館のオープンアクセスのパブリックドメイン（CC0）。出典は `materials/index.yaml`。
 
-浮世絵・版画から切り出したもの（sagi 鷺娘、gaikotsu 団十郎の骸骨、shoki 鍾馗、koheiji 小平次、sarayashiki お菊、nami 神奈川沖浪裏）は
-`method: flood`（人物の輪郭で抜く）または `torn`（ちぎった紙片）。
+浮世絵・版画から切り出したもの（fuji 凱風快晴、sagi 鷺娘、gaikotsu 団十郎の骸骨、shoki 鍾馗）は `method: flood`（外縁の地の色をたどって人物・山を輪郭で抜く）。
+輪郭で抜いた素材だけを置く。ちぎった紙片や矩形の切り出しは使わない。

@@ -1,7 +1,7 @@
 """切り貼り用の素材（ステッカー）。materials/stickers.yaml のレシピから作る。
 
 自作のアイコン（icons.py）の代わりに、本物のパブリックドメインの図版から切り出したものを貼る。
-  sticker(key)              原画の色のまま（method: cutout / key / torn）
+  sticker(key)              原画の色のまま（method: cutout / key / flood）
   sticker(key, ink=..., paper=...)  2色刷り
   halftone_sticker(key, ink)        色を付けない網点（透明の地にインク1色の点）。色面に重ねて馴染ませる
 """
@@ -12,7 +12,7 @@ from functools import lru_cache
 import yaml
 from PIL import Image
 
-from .materials import MAT_DIR, cutout, duotone, flood_cut, open_material, torn
+from .materials import MAT_DIR, cutout, duotone, flood_cut, open_material
 
 RECIPES = MAT_DIR / "stickers.yaml"
 
@@ -36,7 +36,7 @@ def _base(key: str, index: int) -> Image.Image:
         return flood_cut(im, bg=r.get("bg"), tol=r.get("tol", 40))
     if r["method"] == "key":
         return _key(im, r.get("tol", 38))
-    return torn(im, amp=max(8, min(im.size) // 45), seed=index + 3)
+    raise ValueError(f"未対応の method: {r['method']}（輪郭で抜く方式のみ）")
 
 
 def _key(im: Image.Image, tol: float) -> Image.Image:

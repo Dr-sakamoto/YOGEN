@@ -140,7 +140,7 @@ def test_render_silent(tmp_path):
 def test_material_processing():
     from PIL import ImageDraw
 
-    from yogen.materials import cutout, torn, xerox
+    from yogen.materials import cutout, flood_cut, xerox
 
     # 灰色のグラデーションの背景に置いた赤い物を切り抜けるか
     im = Image.new("RGB", (200, 200))
@@ -153,7 +153,10 @@ def test_material_processing():
     assert c.width < 120
     x = xerox(im, paper=(0, 255, 0))
     assert x.getpixel((100, 100))[:3] != (0, 255, 0)  # 赤い円はインクになる
-    assert torn(im, 8).getchannel("A").getpixel((0, 0)) == 0
+    # 外縁の地を抜き、中の物は残る（輪郭で抜く）
+    f = flood_cut(im, bg=[[200, 200, 200, 70]], tol=40)
+    assert f.getchannel("A").getpixel((f.width // 2, f.height // 2)) == 255
+    assert f.width < 120
 
 
 def test_ink_effects():
@@ -182,4 +185,4 @@ def test_sticker_recipes_are_valid():
     for key, items in recipes().items():
         for r in items:
             assert r["material"] in idx, (key, r["material"])  # 出典が記録されている
-            assert r["method"] in ("cutout", "key", "torn", "flood")
+            assert r["method"] in ("cutout", "key", "flood")
