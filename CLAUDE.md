@@ -31,4 +31,5 @@
   1〜3色をその回ごとに選ぶ（episode.yaml の `colors`）。藤黄は英字の題字の地にも使う。
 - 切り抜いた素材（`src/yogen/stickers.py`、レシピは `materials/stickers.yaml`）には色を付けない。
   網点（`halftone_sticker`）にして色面に重ねる。墨の地では胡粉の点、色の地では墨の点。主役の作品だけ原画の色。
+- 切り抜きは輪郭で抜いたものだけ。ちぎった紙片・矩形の切り出し（`torn` など）は禁止。輪郭が取れない図版は素材に載せない。
 - 参考資料（Pinterest のイメージボードなど）は `docs/references.md`。
