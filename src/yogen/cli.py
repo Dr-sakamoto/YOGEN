@@ -154,7 +154,7 @@ def cmd_photo_collage(a):
     img, st = generate(a.seed)
     path = out / f"photo_{a.seed}.png"
     img.save(path)
-    print(f"{path}: 物 {st['objects']} 個＋主役 {st['heroes']}  埋まり {st['covered']*100:.2f}%（隙間 {st['holes']} 画素）")
+    print(f"{path}: 物 {st['objects']} 個＋主役 {st['heroes']}  埋まり {st['covered']*100:.1f}%  墨のまま {st['bare']*100:.1f}%")
 
 
 def cmd_auth(a):
