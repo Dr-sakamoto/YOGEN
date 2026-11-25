@@ -182,4 +182,4 @@ def test_sticker_recipes_are_valid():
     for key, items in recipes().items():
         for r in items:
             assert r["material"] in idx, (key, r["material"])  # 出典が記録されている
-            assert r["method"] in ("cutout", "key", "torn")
+            assert r["method"] in ("cutout", "key", "torn", "flood")

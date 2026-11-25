@@ -119,6 +119,68 @@ def cutout(img: Image.Image, tol: float = 26, shrink: int = 2) -> Image.Image:
     return out.crop(mask.getbbox() or (0, 0, w, h))
 
 
+def _keep_big(mask: Image.Image, keep: float) -> Image.Image:
+    """最大の塊の keep 倍より小さい島（飛び散った墨・紙の傷）を消す。"""
+    k = 4
+    small = mask.resize((mask.width // k, mask.height // k), Image.NEAREST).point(lambda v: 255 if v > 127 else 0)
+    lab = small.copy()
+    sizes = []
+    for y in range(small.height):
+        for x in range(small.width):
+            if lab.getpixel((x, y)) == 255:
+                c = 1 + len(sizes)
+                ImageDraw.floodfill(lab, (x, y), c if c < 255 else 254)
+                sizes.append(0)
+    if not sizes:
+        return mask
+    arr = np.asarray(lab)
+    counts = {i + 1: int((arr == min(i + 1, 254)).sum()) for i in range(len(sizes))}
+    top = max(counts.values())
+    good = np.zeros(arr.shape, bool)
+    for c, n in counts.items():
+        if n >= top * keep:
+            good |= arr == min(c, 254)
+    gm = Image.fromarray((good * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(3)).resize(mask.size, Image.BILINEAR)
+    from PIL import ImageChops
+    return ImageChops.multiply(mask, gm.point(lambda v: 255 if v > 60 else 0))
+
+
+def flood_cut(img: Image.Image, bg=None, tol: float = 40, shrink: int = 1, feather: float = 1.2, keep: float = .15) -> Image.Image:
+    """版画の人物を切り抜く。外縁から地（紙・摺りの色）に近い画素をたどって抜き、残りを人物とする。
+
+    bg: 地の色 [[r,g,b(,許容差)], ...]。省略すると画像の外縁の中央値。地が複数の色なら複数渡す。
+    """
+    a = np.asarray(img.convert("RGB")).astype(np.float32)
+    h, w, _ = a.shape
+    if bg is None:
+        ring = np.concatenate([a[:4].reshape(-1, 3), a[-4:].reshape(-1, 3), a[:, :4].reshape(-1, 3), a[:, -4:].reshape(-1, 3)])
+        bg = [np.median(ring, axis=0)]
+    # 各色は [r, g, b] か [r, g, b, 許容差]。許容差を省略すると tol
+    near = np.zeros((h, w), bool)
+    for c in bg:
+        t = c[3] if len(c) > 3 else tol
+        near |= np.sqrt(((a - np.array(c[:3], dtype=np.float32)) ** 2).sum(axis=2)) < t
+    like = Image.fromarray((near * 255).astype(np.uint8))
+    flood = like.copy()
+    for x in range(0, w, 6):
+        for y in (0, h - 1):
+            if flood.getpixel((x, y)) == 255:
+                ImageDraw.floodfill(flood, (x, y), 128)
+    for y in range(0, h, 6):
+        for x in (0, w - 1):
+            if flood.getpixel((x, y)) == 255:
+                ImageDraw.floodfill(flood, (x, y), 128)
+    outside = np.asarray(flood) == 128
+    mask = Image.fromarray(((~outside) * 255).astype(np.uint8))
+    mask = _keep_big(mask.filter(ImageFilter.MedianFilter(5)), keep)
+    if shrink:
+        mask = mask.filter(ImageFilter.MinFilter(shrink * 2 + 1))
+    mask = mask.filter(ImageFilter.GaussianBlur(feather))
+    out = img.convert("RGBA")
+    out.putalpha(mask)
+    return out.crop(mask.point(lambda v: 255 if v > 40 else 0).getbbox() or (0, 0, w, h))
+
+
 def xerox(img: Image.Image, ink=(22, 19, 15), paper=None, thresh: float = .55, grit: float = .08, seed: int = 1) -> Image.Image:
     """コピー機にかけたような白黒。暗いところをインク、明るいところを紙（paper=None なら透明）にする。"""
     g = ImageOps.autocontrast(ImageOps.grayscale(img), cutoff=1)

@@ -2,6 +2,7 @@
 #   material  materials/index.yaml のキー（出典はそちら）
 #   method    cutout = 立体物の写真の背景を切り抜く / key = 無地の地（絹・紙）を色の差で抜く
 #             torn = 範囲をちぎった紙片として切り出す
+#   flood = 版画の人物を、外縁から地の色をたどって抜く（bg: 地の色[r,g,b(,許容差)]、tol）
 #   crop      [左, 上, 右, 下]（画像の幅・高さに対する割合）。省略で全体
 kingyo:
   - {material: goldfish_painting, method: key, crop: [0.33, 0.45, 0.8, 0.8], note: 金魚の絵（絹本）}
@@ -24,3 +25,17 @@ daruma:
 neko:
   - {material: netsuke_cat, method: cutout, note: 猫の根付（招き猫の代わり。招き猫の古い図版は見つからなかった）}
   - {material: netsuke_cat_bowl, method: cutout, note: 鉢の上の猫の根付}
+# --- 浮世絵・版画から（人物・場面） ---
+sagi:
+  - {material: heron_maiden, method: flood, crop: [0.1, 0.14, 0.97, 0.97], tol: 30, note: 芳年「新形三十六怪撰 鷺娘」（紙の地を抜いた人物）}
+gaikotsu:
+  - {material: danjuro_skeleton, method: flood, crop: [0.1, 0.2, 0.5, 0.95], tol: 50, bg: [[30, 28, 26, 55], [225, 195, 120, 40]], note: 春章 団十郎の骸骨（清玄の亡霊）}
+shoki:
+  - {material: shoki_masanobu, method: torn, note: 奥村政信 鍾馗（墨摺絵）}
+  - {material: shoki_sword, method: torn, note: 奥村政信 剣を研ぐ鍾馗}
+koheiji:
+  - {material: koheiji, method: torn, crop: [0.1, 0.0, 1.0, 0.6], note: 北斎「百物語 小幡小平次」}
+sarayashiki:
+  - {material: sarayashiki, method: torn, crop: [0.05, 0.05, 0.95, 0.62], note: 北斎「百物語 さらやしき」のお菊}
+nami:
+  - {material: great_wave, method: torn, crop: [0.0, 0.0, 0.72, 1.0], note: 北斎「神奈川沖浪裏」の波}

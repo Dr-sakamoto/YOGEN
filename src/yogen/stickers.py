@@ -12,7 +12,7 @@ from functools import lru_cache
 import yaml
 from PIL import Image
 
-from .materials import MAT_DIR, cutout, duotone, open_material, torn
+from .materials import MAT_DIR, cutout, duotone, flood_cut, open_material, torn
 
 RECIPES = MAT_DIR / "stickers.yaml"
 
@@ -32,6 +32,8 @@ def _base(key: str, index: int) -> Image.Image:
     im.thumbnail((1400, 1400))
     if r["method"] == "cutout":
         return cutout(im)
+    if r["method"] == "flood":
+        return flood_cut(im, bg=r.get("bg"), tol=r.get("tol", 40))
     if r["method"] == "key":
         return _key(im, r.get("tol", 38))
     return torn(im, amp=max(8, min(im.size) // 45), seed=index + 3)
