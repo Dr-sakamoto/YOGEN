@@ -9,6 +9,7 @@
   yogen publish                  approved の回を予約投稿する
   yogen status                   全エピソードの状態一覧
   yogen collage [-n 12 --keep 3]  架空の雑誌表紙のコラージュを作り、新規性の高いものを残す
+  yogen photo-collage [--seed 3]  写真だけのコラージュ（工芸品の写真で隙間なく埋める）
   yogen auth <client_secret.json> YouTube の refresh token を取得（ローカルで1回）
 """
 from __future__ import annotations
@@ -143,6 +144,19 @@ def cmd_collage(a):
     print(f"{len(recs)} 枚を {a.out} に残しました")
 
 
+def cmd_photo_collage(a):
+    from pathlib import Path
+
+    from .photo_collage import generate
+
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    img, st = generate(a.seed)
+    path = out / f"photo_{a.seed}.png"
+    img.save(path)
+    print(f"{path}: 物 {st['objects']} 個＋主役 {st['heroes']}  埋まり {st['covered']*100:.1f}%  墨のまま {st['bare']*100:.1f}%")
+
+
 def cmd_auth(a):
     from .upload import run_oauth_flow
 
@@ -165,6 +179,8 @@ def main(argv=None):
     s = sub.add_parser("collage"); s.add_argument("-n", type=int, default=12); s.add_argument("--keep", type=int, default=3)
     s.add_argument("--out", default="out/collage"); s.add_argument("--seed", type=int); s.add_argument("--min-aesthetic", type=float, default=.55)
     s.set_defaults(f=cmd_collage)
+    s = sub.add_parser("photo-collage"); s.add_argument("--seed", type=int, default=3); s.add_argument("--out", default="out/photo")
+    s.set_defaults(f=cmd_photo_collage)
     s = sub.add_parser("auth"); s.add_argument("client_secret"); s.set_defaults(f=cmd_auth)
 
     a = p.parse_args(argv)
