@@ -10,3 +10,6 @@ token*.json
 episodes/*/assets/
 episodes/*/build/
 
+
+# コラージュの生成物
+out/
