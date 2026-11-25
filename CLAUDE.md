@@ -42,4 +42,8 @@
   1時間を超えるのは大きなテーマの特別回だけ。
 - テーマ回は `themes/<id>/theme.yaml`（章立て・作品・テーマ全体の調べもの）。ショートは今まで通り `episodes/<id>/`。
   各ショートの research_notes にはその章の事実を書く（`yogen script` は episode.yaml しか読まない）。
-- 未決：章立ての型、公開の順番（ショートと横のどちらを先に出すか）、16:9 の画面の作り、サムネイル。
+- 公開の順番：横を先に出し、ショートはそのあと関連動画リンクで横へ送る。百物語は2027年1月。
+- リサーチは調べ帳（Q&A のアプリ、https://claude.ai/artifact/C93xVbwfHQ7ChJ84Nq9XRb）で問いに答えと出典を書く。
+  Claude は「回答済み」のものだけを読んで theme.yaml と各 episode.yaml の research_notes / sources に写す。
+  答えを Claude が書いたり、出典のない答えを写したりしない。
+- 未決：章立ての型、16:9 の画面の作り、サムネイル。

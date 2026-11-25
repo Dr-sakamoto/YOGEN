@@ -1,12 +1,13 @@
 # テーマ回の雛形。横1本（40〜50分）とショート数本をこのテーマから作る。
 # 事実はまだ何も書いていない。下の「調べること」は問いだけで、答えは人が一次資料で調べて書く。
+# 問いと答えは調べ帳（https://claude.ai/artifact/C93xVbwfHQ7ChJ84Nq9XRb）で管理し、回答済みのものをここと各 episode.yaml に写す。
 # ショート1本 = 横の1章。各章の research_notes は、ショートの episode.yaml にも写す
 # （yogen script は今のところ episode.yaml の research_notes しか読まない）。
 id: 01-hyakumonogatari
 working_title: "Hokusai's One Hundred Ghost Tales"
 status: draft
-# 公開の時期は未定：12月にショートを先に出すか、1月に横から出すか
-publish_month: null
+# 2027年1月。横を先に出し、ショートはそのあと横へ送る
+publish_month: 2027-01
 # 差し色（palette.py の ACCENTS: yoko, mura, bero, too から1〜3色）。未定
 colors: null
 
