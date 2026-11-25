@@ -1,0 +1,48 @@
+id: 0002-hm-oiwa
+status: draft
+working_title: Oiwa
+artworks:
+- key: main
+  source: aic
+  object_id: '47403'
+  local_path: null
+  title: Oiwa (Oiwa-san), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+  artist: Katsushika Hokusai 葛飾 北斎 (Japanese, 1760-1849)
+  date: 1831-32
+  image_url: https://www.artic.edu/iiif/2/7e6eb649-fbc3-70fa-2b56-9c947d43b7c5/full/2235,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/47403
+  credit: Art Institute of Chicago, Clarence Buckingham Collection
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 2235
+  height: 3000
+- key: kunisada
+  source: aic
+  object_id: '196864'
+  local_path: null
+  title: Oiwa's Ghost (Oiwa no borei)
+  artist: Utagawa Kunisada I (Toyokuni III)
+  date: 1860s
+  image_url: https://www.artic.edu/iiif/2/25d6d1ce-aa82-96a2-887e-b56634843dbd/full/1538,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/196864
+  credit: Art Institute of Chicago, Bruce Goff Archive, gift of Shin'enkan, Inc.
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 1538
+  height: 2250
+research_notes: |
+  # テーマ回 01-hyakumonogatari（themes/01-hyakumonogatari/theme.yaml）の1章。
+  # テーマ全体の調べものは theme.yaml。ここにはこの章の事実だけを書く。
+  # 調べること（問いだけ。答えと出典を書く）
+  # - お岩の話の出典：鶴屋南北『東海道四谷怪談』の初演年と、北斎の図との前後関係
+  # - 提灯に顔が浮かぶ趣向は芝居の演出（提灯抜けなど）から来ているか
+  # - 提灯の文字は何と書いてあるか（読み下しと意味）
+  # - 国貞の図（196864）の上演・役者との対応
+  # 図の所見（画像を見た所見・要確認）
+  # - 北斎：破れた提灯そのものが顔になり、髪が垂れる。地は濃い藍で、下に草
+  # - 国貞：お岩は立ち姿の人として描かれ、破れた提灯は脇にある
+sources: []
+publish_at: null
+colors: null
+youtube_video_id: null
+review_notes: ''
