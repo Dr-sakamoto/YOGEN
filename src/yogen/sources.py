@@ -36,6 +36,9 @@ def fetch_met(art: Artwork) -> Artwork:
     })
 
 
+AIC_MAX_WIDTH = 3000
+
+
 def fetch_aic(art: Artwork) -> Artwork:
     fields = "id,title,artist_display,date_display,image_id,is_public_domain,credit_line"
     url = f"https://api.artic.edu/api/v1/artworks/{art.object_id}?fields={fields}"
@@ -43,13 +46,15 @@ def fetch_aic(art: Artwork) -> Artwork:
     d, iiif = r["data"], r["config"]["iiif_url"]
     if not d.get("is_public_domain"):
         raise NotPublicDomain(f"AIC {art.object_id} はパブリックドメインではありません")
-    # 所蔵館が持つ元の解像度で取る（ズームしても粗くならないように）
+    # 所蔵館が持つ元の解像度で取る（ズームしても粗くならないように）。
+    # ただし AIC の IIIF は幅 3000px を超える要求を 403 で断るので、そこで頭打ちにする。
     info = requests.get(f"{iiif}/{d['image_id']}/info.json", headers=UA, timeout=TIMEOUT).json()
+    width = min(info["width"], AIC_MAX_WIDTH)
     return art.model_copy(update={
         "title": d.get("title"),
         "artist": " ".join((d.get("artist_display") or "").split("\n")[:1]),
         "date": d.get("date_display"),
-        "image_url": f"{iiif}/{d['image_id']}/full/{info['width']},/0/default.jpg",
+        "image_url": f"{iiif}/{d['image_id']}/full/{width},/0/default.jpg",
         "page_url": f"https://www.artic.edu/artworks/{d['id']}",
         "credit": f"Art Institute of Chicago, {d.get('credit_line', '')}".strip(", "),
         "license": "CC0 (Art Institute of Chicago)",

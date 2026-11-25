@@ -1,0 +1,31 @@
+id: 0006-hm-warai-hannya
+status: draft
+working_title: The Laughing Demoness
+artworks:
+- key: main
+  source: aic
+  object_id: '47411'
+  local_path: null
+  title: The Laughing Demoness (Warai Hannya), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+  artist: Katsushika Hokusai 葛飾 北斎 (Japanese, 1760-1849)
+  date: 1831-32
+  image_url: https://www.artic.edu/iiif/2/6c474c5c-8acd-e41a-b78a-4e991dc96c64/full/2266,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/47411
+  credit: Art Institute of Chicago, Clarence Buckingham Collection
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 2266
+  height: 3000
+research_notes: |
+  # テーマ回 01-hyakumonogatari（themes/01-hyakumonogatari/theme.yaml）の1章。
+  # テーマ全体の調べものは theme.yaml。ここにはこの章の事実だけを書く。
+  # 調べること
+  # - 「般若」と鬼女の関係（能面の般若、嫉妬の鬼女）
+  # - 子どもを食う鬼女の話として、拠り所になる伝承はあるか（諸説を出典つきで）
+  # 図の所見（要確認）
+  # - 角のある女が子どもの首を手に大きく笑う。画面が円で切り取られている
+sources: []
+publish_at: null
+colors: null
+youtube_video_id: null
+review_notes: ''

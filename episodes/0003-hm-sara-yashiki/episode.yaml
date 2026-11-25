@@ -1,0 +1,32 @@
+id: 0003-hm-sara-yashiki
+status: draft
+working_title: The Mansion of the Plates
+artworks:
+- key: main
+  source: aic
+  object_id: '47407'
+  local_path: null
+  title: The Mansion of the Plates (Sara yashiki), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+  artist: Katsushika Hokusai 葛飾 北斎 (Japanese, 1760-1849)
+  date: 1831-32
+  image_url: https://www.artic.edu/iiif/2/0b59ff1e-d677-8eed-75ab-d5dad6fd1865/full/2552,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/47407
+  credit: Art Institute of Chicago, Clarence Buckingham Collection
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 2552
+  height: 3479
+research_notes: |
+  # テーマ回 01-hyakumonogatari（themes/01-hyakumonogatari/theme.yaml）の1章。
+  # テーマ全体の調べものは theme.yaml。ここにはこの章の事実だけを書く。
+  # 調べること
+  # - 皿屋敷（お菊）の伝承の系統（番町・播州など）と、北斎の図がどれに拠るか
+  # - 皿を数える話の筋と、皿が割られた（失われた）理由の諸説
+  # 図の所見（要確認）
+  # - 井戸から女の首が伸び、首から下が青い染付の皿の連なりになっている
+  # - 口から煙のような息を吐く。井戸の縁に蔦のような葉
+sources: []
+publish_at: null
+colors: null
+youtube_video_id: null
+review_notes: ''

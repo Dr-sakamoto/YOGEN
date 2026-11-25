@@ -1,0 +1,33 @@
+id: 0005-hm-shunen
+status: draft
+working_title: Memorial Anniversary (Shunen)
+artworks:
+- key: main
+  source: aic
+  object_id: '47417'
+  local_path: null
+  title: Memorial Anniversary (Shunen), from the series "One Hundred Ghost Tales (Hyaku monogatari)"
+  artist: Katsushika Hokusai 葛飾 北斎 (Japanese, 1760-1849)
+  date: 1831-32
+  image_url: https://www.artic.edu/iiif/2/9df55daa-afc7-9df3-1fbf-da7fb896771e/full/2309,/0/default.jpg
+  page_url: https://www.artic.edu/artworks/47417
+  credit: Art Institute of Chicago, Clarence Buckingham Collection
+  license: CC0 (Art Institute of Chicago)
+  is_public_domain: true
+  width: 2309
+  height: 3000
+research_notes: |
+  # テーマ回 01-hyakumonogatari（themes/01-hyakumonogatari/theme.yaml）の1章。
+  # テーマ全体の調べものは theme.yaml。ここにはこの章の事実だけを書く。
+  # 調べること
+  # - 題の「しうねん（執念）」の意味と、蛇＝執念という図像の背景
+  # - 位牌の戒名・文字の読み下しと、何か元ネタ（実在の人・話）があるか
+  # - 茶碗の卍（まんじ）の意味（仏教の記号で、ナチスの鉤十字とは別物であることの説明が英語圏向けに必要）
+  # - 供物・器の名前（何の儀礼の場面か）
+  # 図の所見（要確認）
+  # - 人も幽霊も描かれず、位牌・供物・茶碗に蛇が巻きつく
+sources: []
+publish_at: null
+colors: null
+youtube_video_id: null
+review_notes: ''
