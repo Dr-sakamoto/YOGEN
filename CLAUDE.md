@@ -20,6 +20,10 @@
 ## 開発
 
 - `pip install -e ".[dev]"`、`pytest -q`（ffmpeg が必要）
+- 管理アプリとコラージュエディタは `yogen studio`（`src/yogen/studio/`、標準ライブラリの http.server）。
+  層と合成は `src/yogen/cover.py`。エディタと書き出しは同じ数値・同じ部品画像を使う。
+- 順番：人が横のコンセプトアート（`episodes/<id>/concept.yaml`、サムネイル）を先に仕上げる。
+  縦のショート（`cover.yaml` と本編）は、Claude がそのコンセプトアートを元に組む。
 - CLI は `src/yogen/cli.py`。台本の書き方は `prompts/script_system.md`、設定は `config/channel.yaml`。
 
 ## ブランド（決定）

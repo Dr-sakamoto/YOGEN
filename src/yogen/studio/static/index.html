@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>yōgen studio</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#/"><img src="/api/part/wordmark.png" alt="yōgen"><span>studio</span></a>
+  <div id="top-slot" class="top-slot"></div>
+</header>
+
+<main id="view-list" class="view" hidden>
+  <section class="list-head">
+    <h1>エピソード</h1>
+    <p class="muted">状態を進める（fact_checked / approved）のは人が <code>yogen mark</code> で行います。ここでは見るだけです。</p>
+  </section>
+  <div id="episodes" class="cards"></div>
+</main>
+
+<main id="view-editor" class="view editor" hidden>
+  <aside class="tray">
+    <nav class="tray-tabs" id="tray-tabs"></nav>
+    <div class="tray-body" id="tray-body"></div>
+    <p class="tray-hint muted">ドラッグでステージに置く／クリックで中央に置く</p>
+  </aside>
+
+  <section class="stage-wrap" id="stage-wrap">
+    <div class="stage" id="stage">
+      <div class="grid" id="grid"></div>
+      <div class="layers" id="layers"></div>
+      <img class="preview" id="preview" alt="">
+      <div class="safe" id="safe">
+        <div class="safe-r"><span>ボタン</span></div>
+        <div class="safe-b"><span>題名・チャンネル名</span></div>
+        <div class="safe-t"><span>0:58</span></div>
+      </div>
+    </div>
+    <div class="stage-status muted" id="stage-status"></div>
+  </section>
+
+  <aside class="side">
+    <section class="panel" id="inspector"></section>
+    <section class="panel">
+      <h3>重なり <span class="muted small">上ほど手前</span></h3>
+      <ol class="layer-list" id="layer-list"></ol>
+    </section>
+    <section class="panel keys muted small">
+      <b>キー</b> 矢印 移動（Shift で10倍）・Delete 削除・⌘D 複製・[ ] 奥へ／手前へ・F 反転・⌘Z 取り消し・⌘S 保存・Space たしかめる
+    </section>
+  </aside>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
