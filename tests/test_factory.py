@@ -183,3 +183,97 @@ def test_sticker_recipes_are_valid():
         for r in items:
             assert r["material"] in idx, (key, r["material"])  # 出典が記録されている
             assert r["method"] in ("cutout", "key", "torn")
+
+
+# ---- 表紙のコラージュ（yogen studio） ----
+
+def _cover_ep(tmp_path):
+    ep = sample_episode(tmp_path, colors=["yoko", "bero"])
+    return ep, tmp_path
+
+
+def test_cover_dot_ink_follows_ground():
+    from yogen.cover import Cover, FillLayer, StickerLayer, dot_ink, ground_under
+
+    c = Cover(layers=[
+        FillLayer(x=540, y=960, w=600, h=300, rot=30, color="yoko"),
+        StickerLayer(x=540, y=960, w=200, sticker="kitsune"),   # 色面の中心
+        StickerLayer(x=100, y=100, w=200, sticker="kitsune"),   # 墨の地
+    ])
+    assert dot_ink(ground_under(c, 1)) == "sumi"
+    assert dot_ink(ground_under(c, 2)) == "gofun"
+
+
+def test_cover_check_enforces_brand(tmp_path):
+    from yogen.cover import Cover, FillLayer, StickerLayer, TextLayer, check_cover
+
+    ep, _ = _cover_ep(tmp_path)
+    ok = Cover(layers=[FillLayer(x=0, y=0, w=10, h=10, color="bero"), TextLayer(x=0, y=0, text="A", color="gofun")])
+    assert check_cover(ok, ep) == []
+    bad = Cover(layers=[
+        FillLayer(x=0, y=0, w=10, h=10, color="mura"),       # この回の差し色ではない
+        TextLayer(x=0, y=0, text="A", font="nope.ttf"),
+        StickerLayer(x=0, y=0, w=10, sticker="kitsune", index=9),
+    ])
+    assert len(check_cover(bad, ep)) == 3
+
+
+def test_cover_roundtrip_and_render(tmp_path):
+    from yogen.cover import default_cover, load_cover, render_cover, save_cover
+
+    ep, d = _cover_ep(tmp_path)
+    c = default_cover(ep)
+    save_cover(d, c)
+    assert (d / "cover.yaml").read_text().startswith("layers:\n- kind: fill")
+    assert load_cover(d) == c
+    im = render_cover(c, d, size=(270, 480))
+    assert im.size == (270, 480)
+    assert im.getpixel((2, 2)) == (22, 19, 15)  # 地は墨
+
+
+def test_studio_api(tmp_path, monkeypatch):
+    import json
+    import threading
+    import urllib.request
+    from http.server import ThreadingHTTPServer
+
+    from yogen import config, episode
+    from yogen.studio import server
+
+    epdir = tmp_path / "episodes" / "t"
+    ep, _ = _cover_ep(epdir)
+    epdir.mkdir(parents=True, exist_ok=True)
+    episode._dump(ep.model_dump(mode="json"), epdir / "episode.yaml")
+    for mod in (config, episode, server):
+        monkeypatch.setattr(mod, "EPISODES_DIR", tmp_path / "episodes")
+
+    httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{httpd.server_port}"
+
+    def call(path, data=None, method="GET"):
+        req = urllib.request.Request(base + path, method=method, data=json.dumps(data).encode() if data else None,
+                                     headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req) as r:
+                return r.status, r.read()
+        except urllib.error.HTTPError as e:
+            return e.code, e.read()
+
+    try:
+        st, body = call("/api/episodes")
+        assert st == 200 and json.loads(body)[0]["id"] == "t"
+        st, body = call("/api/episodes/t")
+        cover = json.loads(body)["cover"]
+        assert json.loads(body)["cover_saved"] is False
+        assert call("/api/episodes/t/cover", {"layers": [{"kind": "fill", "x": 0, "y": 0, "w": 9, "h": 9,
+                                                           "color": "too"}]}, "PUT")[0] == 422
+        assert call("/api/episodes/t/cover", cover, "PUT")[0] == 200
+        assert (epdir / "cover.yaml").exists()
+        st, body = call("/api/episodes/t/cover.jpg?w=135")
+        assert st == 200 and body[:2] == b"\xff\xd8"
+        assert call("/api/episodes/../etc/passwd")[0] == 404
+        assert call("/fonts/../../pyproject.toml")[0] == 404
+        assert call("/")[0] == 200
+    finally:
+        httpd.shutdown()

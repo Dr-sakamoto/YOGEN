@@ -20,6 +20,8 @@
 ## 開発
 
 - `pip install -e ".[dev]"`、`pytest -q`（ffmpeg が必要）
+- 管理アプリと表紙のコラージュエディタは `yogen studio`（`src/yogen/studio/`、標準ライブラリの http.server）。
+  表紙の層と合成は `src/yogen/cover.py`、保存は `episodes/<id>/cover.yaml`。エディタと書き出しは同じ数値・同じ部品画像を使う。
 - CLI は `src/yogen/cli.py`。台本の書き方は `prompts/script_system.md`、設定は `config/channel.yaml`。
 
 ## ブランド（決定）

@@ -8,6 +8,8 @@
   yogen render <id>              動画を作る（build/final.mp4）
   yogen publish                  approved の回を予約投稿する
   yogen status                   全エピソードの状態一覧
+  yogen studio                   管理アプリと表紙のコラージュエディタを手元で開く
+  yogen cover <id>               cover.yaml から表紙を書き出す（build/cover.png）
   yogen auth <client_secret.json> YouTube の refresh token を取得（ローカルで1回）
 """
 from __future__ import annotations
@@ -125,6 +127,26 @@ def cmd_status(a):
         print(f"  {ep.status.value:13} {ep.publish_at or '-':10}  {ep.id}  {ep.working_title}")
 
 
+def cmd_studio(a):
+    from .studio.server import serve
+
+    serve(a.host, a.port, open_browser=not a.no_open)
+
+
+def cmd_cover(a):
+    from .cover import check_cover, load_cover
+    from .studio.server import export_cover
+
+    ep, d = load_episode(a.id), episode_dir(a.id)
+    cover = load_cover(d)
+    if cover is None:
+        sys.exit("cover.yaml がありません。`yogen studio` で表紙を組んで保存してください")
+    if errs := check_cover(cover, ep):
+        sys.exit("ブランドの決まりに合わない層があります:\n  " + "\n  ".join(errs))
+    ensure_assets(ep, d)
+    print(f"書き出しました: {export_cover(d, cover)}")
+
+
 def cmd_icons(a):
     from pathlib import Path
 
@@ -153,6 +175,9 @@ def main(argv=None):
     s = sub.add_parser("render"); s.add_argument("id"); s.add_argument("--tts", choices=["silent", "elevenlabs"]); s.set_defaults(f=cmd_render)
     s = sub.add_parser("publish"); s.add_argument("--id"); s.add_argument("--dry-run", action="store_true"); s.set_defaults(f=cmd_publish)
     s = sub.add_parser("status"); s.set_defaults(f=cmd_status)
+    s = sub.add_parser("studio"); s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=8765)
+    s.add_argument("--no-open", action="store_true"); s.set_defaults(f=cmd_studio)
+    s = sub.add_parser("cover"); s.add_argument("id"); s.set_defaults(f=cmd_cover)
     s = sub.add_parser("icons"); s.add_argument("--dest"); s.set_defaults(f=cmd_icons)
     s = sub.add_parser("auth"); s.add_argument("client_secret"); s.set_defaults(f=cmd_auth)
 
