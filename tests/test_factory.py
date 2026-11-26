@@ -229,6 +229,10 @@ def test_cover_roundtrip_and_render(tmp_path):
     im = render_cover(c, d, size=(270, 480))
     assert im.size == (270, 480)
     assert im.getpixel((2, 2)) == (22, 19, 15)  # 地は墨
+    concept = default_cover(ep, "concept")
+    save_cover(d, concept, "concept")
+    assert load_cover(d, "concept") == concept and load_cover(d, "cover") == c
+    assert render_cover(concept, d, board="concept").size == (1920, 1080)
 
 
 def test_studio_api(tmp_path, monkeypatch):
@@ -264,14 +268,20 @@ def test_studio_api(tmp_path, monkeypatch):
         st, body = call("/api/episodes")
         assert st == 200 and json.loads(body)[0]["id"] == "t"
         st, body = call("/api/episodes/t")
-        cover = json.loads(body)["cover"]
-        assert json.loads(body)["cover_saved"] is False
-        assert call("/api/episodes/t/cover", {"layers": [{"kind": "fill", "x": 0, "y": 0, "w": 9, "h": 9,
-                                                           "color": "too"}]}, "PUT")[0] == 422
-        assert call("/api/episodes/t/cover", cover, "PUT")[0] == 200
-        assert (epdir / "cover.yaml").exists()
-        st, body = call("/api/episodes/t/cover.jpg?w=135")
+        boards = json.loads(body)["boards"]
+        assert boards["concept"]["saved"] is False and boards["cover"]["saved"] is False
+        cover = boards["concept"]["cover"]
+        assert call("/api/episodes/t/concept", {"layers": [{"kind": "fill", "x": 0, "y": 0, "w": 9, "h": 9,
+                                                             "color": "too"}]}, "PUT")[0] == 422
+        assert call("/api/episodes/t/concept", cover, "PUT")[0] == 200
+        assert (epdir / "concept.yaml").exists() and not (epdir / "cover.yaml").exists()
+        st, body = call("/api/episodes/t/concept.jpg?w=160")
         assert st == 200 and body[:2] == b"\xff\xd8"
+        assert Image.open(__import__("io").BytesIO(body)).size == (160, 90)  # 横 16:9
+        st, body = call("/api/episodes/t/concept/export", {}, "POST")
+        assert st == 200 and (epdir / "build" / "thumbnail.jpg").exists()
+        assert Image.open(epdir / "build" / "thumbnail.jpg").size == (1280, 720)
+        assert call("/api/episodes/t/other", cover, "PUT")[0] == 404
         assert call("/api/episodes/../etc/passwd")[0] == 404
         assert call("/fonts/../../pyproject.toml")[0] == 404
         assert call("/")[0] == 200

@@ -1,8 +1,12 @@
-"""表紙（サムネイル）のコラージュ。episodes/<id>/cover.yaml に層として記録し、1枚の PNG に合成する。
+"""サムネイルのコラージュ。層として YAML に記録し、1枚の画像に合成する。
+
+画面（board）は2つ。人がまず横のコンセプトアートを仕上げ、縦のショート表紙はそれを元に組み直す。
+  concept  横 1920×1080。動画のサムネイル（書き出しは 1280×720 の JPEG も）。episodes/<id>/concept.yaml
+  cover    縦 1080×1920（channel.yaml の render）。ショートの表紙。episodes/<id>/cover.yaml
 
 エディタ（yogen studio）で組んだものと、ここでの書き出しは同じ数値から作る。
 
-  座標    キャンバスは channel.yaml の render の幅×高さ（1080×1920）。x, y は層の中心、w は幅（px）。
+  座標    x, y は層の中心、w は幅（キャンバスの px）。
           rot は時計回りの角度、flip は左右反転。layers は下から上の順。
   地      墨で固定（ブランドの決まり）。
   層      fill      色面。色はその回の差し色（episode.yaml の colors）だけ
@@ -91,23 +95,32 @@ class Cover(BaseModel):
 
 # ---------- 読み書きと検査 ----------
 
-def canvas_size() -> tuple[int, int]:
+BOARDS = ("concept", "cover")
+CONCEPT_SIZE = (1920, 1080)
+THUMBNAIL_SIZE = (1280, 720)  # YouTube のサムネイルの推奨サイズ
+
+
+def canvas_size(board: str = "cover") -> tuple[int, int]:
+    if board == "concept":
+        return CONCEPT_SIZE
     r = channel_config()["render"]
     return r["width"], r["height"]
 
 
-def cover_path(ep_dir: Path) -> Path:
-    return ep_dir / "cover.yaml"
+def cover_path(ep_dir: Path, board: str = "cover") -> Path:
+    if board not in BOARDS:
+        raise ValueError(f"board は {BOARDS} のどれか: {board}")
+    return ep_dir / f"{board}.yaml"
 
 
-def load_cover(ep_dir: Path) -> Cover | None:
-    p = cover_path(ep_dir)
+def load_cover(ep_dir: Path, board: str = "cover") -> Cover | None:
+    p = cover_path(ep_dir, board)
     if not p.exists():
         return None
     return Cover.model_validate(yaml.safe_load(p.read_text(encoding="utf-8")) or {})
 
 
-def save_cover(ep_dir: Path, cover: Cover) -> Path:
+def save_cover(ep_dir: Path, cover: Cover, board: str = "cover") -> Path:
     from .episode import _dump
 
     layers = []
@@ -116,7 +129,7 @@ def save_cover(ep_dir: Path, cover: Cover) -> Path:
         for k, v in layer.model_dump(mode="json", exclude_defaults=True).items():
             raw[k] = round(v, 1) if isinstance(v, float) else v
         layers.append(raw)
-    p = cover_path(ep_dir)
+    p = cover_path(ep_dir, board)
     _dump({"layers": layers}, p)
     return p
 
@@ -247,8 +260,12 @@ def _place(canvas: Image.Image, part: Image.Image, l, w: float | None = None, h:
     canvas.alpha_composite(im, (round(l.x - im.width / 2), round(l.y - im.height / 2)))
 
 
-def render_cover(cover: Cover, ep_dir: Path, size: tuple[int, int] | None = None) -> Image.Image:
-    W, H = size or canvas_size()
+def render_cover(cover: Cover, ep_dir: Path, size: tuple[int, int] | None = None,
+                 board: str = "cover") -> Image.Image:
+    """size を渡すとその大きさで描く（層の座標は board のキャンバスのまま、全体を縮める）。"""
+    W, H = canvas_size(board)
+    if size and size != (W, H):
+        return render_cover(cover, ep_dir, board=board).resize(size, Image.LANCZOS)
     canvas = Image.new("RGBA", (W, H), (*PALETTE["sumi"].rgb, 255))
     for i, l in enumerate(cover.layers):
         if isinstance(l, FillLayer):
@@ -270,8 +287,24 @@ def render_cover(cover: Cover, ep_dir: Path, size: tuple[int, int] | None = None
     return canvas.convert("RGB")
 
 
-def default_cover(ep) -> Cover:
+def default_cover(ep, board: str = "cover") -> Cover:
     """最初の雛形：差し色の帯、作品、題字。エディタで動かして使う。"""
+    if board == "concept":
+        return _rounded(default_concept(ep))
+    return _rounded(_default_portrait(ep))
+
+
+def _rounded(cover: Cover) -> Cover:
+    """保存と同じ桁（小数1桁）にそろえる。"""
+    data = cover.model_dump(mode="json")
+    for raw in data["layers"]:
+        for k, v in raw.items():
+            if isinstance(v, float):
+                raw[k] = round(v, 1)
+    return Cover.model_validate(data)
+
+
+def _default_portrait(ep) -> Cover:
     W, H = canvas_size()
     accent = [c.key for c in for_episode(ep)[1:]][0]
     art = ep.artworks[0]
@@ -285,3 +318,18 @@ def default_cover(ep) -> Cover:
                   size=60, color="gofun"),
     ])
 
+
+def default_concept(ep) -> Cover:
+    """横の雛形：右に作品、左に題字と題、斜めの差し色の帯。"""
+    W, H = CONCEPT_SIZE
+    accent = [c.key for c in for_episode(ep)[1:]][0]
+    art = ep.artworks[0]
+    ratio = (art.height / art.width) if art.width and art.height else 1.45
+    aw = min(W * .46, H * .88 / ratio)
+    return Cover(layers=[
+        FillLayer(x=W * .36, y=H * .6, w=W * 1.0, h=H * .3, rot=-8, color=accent),
+        ArtworkLayer(x=W * .72, y=H / 2, w=aw, rot=3, artwork=art.key),
+        WordmarkLayer(x=W * .17, y=H * .14, w=W * .22),
+        TextLayer(x=W * .26, y=H * .6, text="\n".join(textwrap.wrap(ep.working_title.upper(), 20)[:3]),
+                  size=62, color="gofun"),
+    ])

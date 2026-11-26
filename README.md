@@ -42,19 +42,22 @@ yogen check 0002-soma-no-furudairi
 yogen render 0002-soma-no-furudairi --tts silent   # APIキーなしで無音の試写
 yogen status
 yogen studio                          # 管理アプリと表紙エディタをブラウザで開く
-yogen cover 0002-soma-no-furudairi    # cover.yaml から表紙を書き出す
+yogen cover 0002-soma-no-furudairi    # コンセプトアートを書き出す（--board cover で縦の表紙）
 ```
 
-## 管理アプリと表紙のコラージュエディタ（yogen studio）
+## 管理アプリとコラージュエディタ（yogen studio）
 
 `yogen studio` で手元にサーバーが立ち、ブラウザで開きます（http://127.0.0.1:8765/）。
 
-- **一覧**：エピソードごとの状態、事実確認の残り（claims の確認済み/全体）、公開日、表紙。
+- **一覧**：エピソードごとの状態、事実確認の残り（claims の確認済み/全体）、公開日、サムネ。
   状態を進めるのは今まで通り人が `yogen mark` で行い、ここでは見るだけ。
-- **表紙エディタ**：左の棚（作品・素材・色面・文字・ロゴ）からパーツをステージにドラッグして、
+- **進め方**：まず人が横のコンセプトアート（1920×1080、動画のサムネイル）を1枚仕上げる。
+  縦のショート（表紙 1080×1920 と本編）は、それを元に組み直す。
+- **エディタ**：上の帯で「コンセプト（横）」と「ショート表紙（縦）」を切り替える。左の棚（作品・素材・色面・文字・ロゴ）からパーツをステージにドラッグして、
   動かす・大きさを変える・回す・重なり順を入れ替える。マス目（30px）に吸い付く。
-  「たしかめる」（Space）で書き出しと同じ処理の合成を見る。ショートの画面で隠れやすい範囲も重ねて出す。
-- 保存先は `episodes/<id>/cover.yaml`（層の一覧。git で差分が見える）。書き出しは `build/cover.png`。
+  「たしかめる」（Space）で書き出しと同じ処理の合成を見る。隠れやすい範囲（横は再生時間の表示、縦はショートのボタンと題名）も重ねて出す。
+- 保存先は `episodes/<id>/concept.yaml`（横）と `cover.yaml`（縦）。層の一覧なので git で差分が見える。
+  書き出しは `build/concept.png` と YouTube 用の `build/thumbnail.jpg`（1280×720）、縦は `build/cover.png`。
 - ブランドの決まりはエディタと保存時の検査で守る：地は墨、色面はその回の `colors` だけ、
   素材は色を付けずに網点にする（墨の地なら胡粉の点、色面の上なら墨の点。中心が載っている面で自動で決まる）、
   原画の色のまま置けるのは主役の作品だけ。決まりに合わない層があると保存できない。
@@ -69,7 +72,8 @@ config/channel.yaml        チャンネル設定（モデル、尺、音声、�
 prompts/script_system.md   台本の書き方（動画の型・事実のルール）。ここを直すと全回の台本が変わる
 episodes/<id>/episode.yaml 1本ごとの企画・メモ・状態（人が書く）
 episodes/<id>/script.yaml  台本（Claudeが下書き、人が直す）
-episodes/<id>/cover.yaml   表紙のコラージュ（yogen studio で組む）
+episodes/<id>/concept.yaml 横のコンセプトアート＝サムネイル（yogen studio で組む。ショートの元になる）
+episodes/<id>/cover.yaml   縦のショート表紙
 src/yogen/                 工場本体
 .github/workflows/         CI（テスト＋試写）、Draft script、Publish
 ```

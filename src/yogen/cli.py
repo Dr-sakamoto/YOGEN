@@ -9,7 +9,7 @@
   yogen publish                  approved の回を予約投稿する
   yogen status                   全エピソードの状態一覧
   yogen studio                   管理アプリと表紙のコラージュエディタを手元で開く
-  yogen cover <id>               cover.yaml から表紙を書き出す（build/cover.png）
+  yogen cover <id> [--board concept|cover]  コンセプトアート（横）かショート表紙（縦）を書き出す
   yogen collage [-n 12 --keep 3]  架空の雑誌表紙のコラージュを作り、新規性の高いものを残す
   yogen photo-collage [--seed 3]  写真だけのコラージュ（工芸品の写真で隙間なく埋める）
   yogen auth <client_secret.json> YouTube の refresh token を取得（ローカルで1回）
@@ -140,13 +140,14 @@ def cmd_cover(a):
     from .studio.server import export_cover
 
     ep, d = load_episode(a.id), episode_dir(a.id)
-    cover = load_cover(d)
+    cover = load_cover(d, a.board)
     if cover is None:
-        sys.exit("cover.yaml がありません。`yogen studio` で表紙を組んで保存してください")
+        sys.exit(f"{a.board}.yaml がありません。`yogen studio` で組んで保存してください")
     if errs := check_cover(cover, ep):
         sys.exit("ブランドの決まりに合わない層があります:\n  " + "\n  ".join(errs))
     ensure_assets(ep, d)
-    print(f"書き出しました: {export_cover(d, cover)}")
+    for path in export_cover(d, cover, a.board):
+        print(f"書き出しました: {path}")
 
 
 def cmd_icons(a):
@@ -199,7 +200,8 @@ def main(argv=None):
     s = sub.add_parser("status"); s.set_defaults(f=cmd_status)
     s = sub.add_parser("studio"); s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=8765)
     s.add_argument("--no-open", action="store_true"); s.set_defaults(f=cmd_studio)
-    s = sub.add_parser("cover"); s.add_argument("id"); s.set_defaults(f=cmd_cover)
+    s = sub.add_parser("cover"); s.add_argument("id"); s.add_argument("--board", choices=["concept", "cover"], default="concept")
+    s.set_defaults(f=cmd_cover)
     s = sub.add_parser("icons"); s.add_argument("--dest"); s.set_defaults(f=cmd_icons)
     s = sub.add_parser("collage"); s.add_argument("-n", type=int, default=12); s.add_argument("--keep", type=int, default=3)
     s.add_argument("--out", default="out/collage"); s.add_argument("--seed", type=int); s.add_argument("--min-aesthetic", type=float, default=.55)

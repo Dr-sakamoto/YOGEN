@@ -1,9 +1,9 @@
 """yogen studio：運営管理アプリとコラージュエディタ（手元で起動するローカルサーバー）。
 
-  /                         エピソード一覧（状態・事実確認の残り・公開日・表紙）
-  /#/cover/<id>             表紙のコラージュエディタ
+  /                         エピソード一覧（状態・事実確認の残り・公開日・サムネ）
+  /#/edit/<id>/<board>      コラージュエディタ。board は concept（横のコンセプトアート）か cover（縦のショート表紙）
 
-表紙は episodes/<id>/cover.yaml に保存するので、ふだんの git・PR の流れに乗る。
+組んだものは episodes/<id>/<board>.yaml に保存するので、ふだんの git・PR の流れに乗る。
 状態（fact_checked / approved）はここでは進めない。人が `yogen mark` で進める。
 """
 from __future__ import annotations
@@ -56,7 +56,8 @@ def episode_summary(ep) -> dict:
         "publish_at": ep.publish_at,
         "colors": [c.key for c in for_episode(ep)[1:]],
         "claims": _claims(d),
-        "has_cover": cv.cover_path(d).exists(),
+        "has_concept": cv.cover_path(d, "concept").exists(),
+        "has_cover": cv.cover_path(d, "cover").exists(),
         "artworks_ready": all(asset_path(d, a.key).exists() for a in ep.artworks),
         "youtube_video_id": ep.youtube_video_id,
     }
@@ -64,16 +65,18 @@ def episode_summary(ep) -> dict:
 
 def episode_detail(ep) -> dict:
     d = EPISODES_DIR / ep.id
-    cover = cv.load_cover(d)
     out = episode_summary(ep)
+    boards = {}
+    for b in cv.BOARDS:
+        saved = cv.load_cover(d, b)
+        boards[b] = {"cover": (saved or cv.default_cover(ep, b)).model_dump(mode="json"), "saved": saved is not None}
     out.update({
         "artworks": [
             {"key": a.key, "title": a.title, "artist": a.artist, "date": a.date, "license": a.license,
              "width": a.width, "height": a.height, "ready": asset_path(d, a.key).exists()}
             for a in ep.artworks
         ],
-        "cover": (cover or cv.default_cover(ep)).model_dump(mode="json"),
-        "cover_saved": cover is not None,
+        "boards": boards,
     })
     return out
 
@@ -81,7 +84,6 @@ def episode_detail(ep) -> dict:
 def parts() -> dict:
     from ..stickers import recipes
 
-    W, H = cv.canvas_size()
     stickers = []
     for key, rs in recipes().items():
         for i, r in enumerate(rs):
@@ -89,7 +91,7 @@ def parts() -> dict:
                              "thumb": f"/assets/stickers/{key}_{i}.png"
                              if (STICKER_PNG / f"{key}_{i}.png").exists() else None})
     return {
-        "canvas": {"width": W, "height": H},
+        "canvases": {b: dict(zip(("width", "height"), cv.canvas_size(b))) for b in cv.BOARDS},
         "palette": {k: {"name": c.name, "hex": c.hex} for k, c in PALETTE.items()},
         "stickers": stickers,
         "fonts": cv.fonts(),
@@ -168,11 +170,11 @@ class Handler(BaseHTTPRequestHandler):
                         return self._error(404, "作品がありません")
                     return self._file(asset_path(EPISODES_DIR / ep.id, m[2]))
                 return
-            if m := re.fullmatch(r"/api/episodes/([\w-]+)/cover\.(png|jpg)", p):
+            if m := re.fullmatch(r"/api/episodes/([\w-]+)/(concept|cover)\.(png|jpg)", p):
                 if ep := self._episode(m[1]):
                     d = EPISODES_DIR / ep.id
-                    cover = cv.load_cover(d) or cv.default_cover(ep)
-                    return self._render(cover, d, m[2], q)
+                    cover = cv.load_cover(d, m[2]) or cv.default_cover(ep, m[2])
+                    return self._render(cover, d, m[3], q, m[2])
                 return
             if m := re.fullmatch(r"/api/part/sticker/([\w]+)/(\d+)/(gofun|sumi)\.png", p):
                 from ..stickers import recipes
@@ -196,11 +198,11 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:  # エディタに理由を見せる
             self._error(500, f"{type(e).__name__}: {e}")
 
-    def _render(self, cover: cv.Cover, d: Path, fmt: str, q: dict):
+    def _render(self, cover: cv.Cover, d: Path, fmt: str, q: dict, board: str):
         width = int(q.get("w", ["0"])[0] or 0)
         with _lock:
             try:
-                im = cv.render_cover(cover, d)
+                im = cv.render_cover(cover, d, board=board)
             except FileNotFoundError as e:
                 return self._error(409, str(e))
         if width and width < im.width:
@@ -226,10 +228,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         try:
-            if m := re.fullmatch(r"/api/episodes/([\w-]+)/cover", urlparse(self.path).path):
+            if m := re.fullmatch(r"/api/episodes/([\w-]+)/(concept|cover)", urlparse(self.path).path):
                 if (ep := self._episode(m[1])) and (cover := self._cover_from_body(ep)):
                     with _lock:
-                        path = cv.save_cover(EPISODES_DIR / ep.id, cover)
+                        path = cv.save_cover(EPISODES_DIR / ep.id, cover, m[2])
                     return self._json({"saved": _rel(path)})
                 return
             self._error(404, "ありません")
@@ -240,22 +242,22 @@ class Handler(BaseHTTPRequestHandler):
         u = urlparse(self.path)
         try:
             # 保存せずに今の状態を書き出して見る（エディタの「たしかめる」）
-            if m := re.fullmatch(r"/api/episodes/([\w-]+)/preview\.jpg", u.path):
+            if m := re.fullmatch(r"/api/episodes/([\w-]+)/(concept|cover)/preview\.jpg", u.path):
                 if (ep := self._episode(m[1])) and (cover := self._cover_from_body(ep)):
-                    return self._render(cover, EPISODES_DIR / ep.id, "jpg", parse_qs(u.query))
+                    return self._render(cover, EPISODES_DIR / ep.id, "jpg", parse_qs(u.query), m[2])
                 return
-            if m := re.fullmatch(r"/api/episodes/([\w-]+)/export", u.path):
+            if m := re.fullmatch(r"/api/episodes/([\w-]+)/(concept|cover)/export", u.path):
                 if ep := self._episode(m[1]):
                     d = EPISODES_DIR / ep.id
-                    cover = cv.load_cover(d)
+                    cover = cv.load_cover(d, m[2])
                     if cover is None:
-                        return self._error(409, "先に表紙を保存してください")
+                        return self._error(409, "先に保存してください")
                     with _lock:
                         try:
-                            path = export_cover(d, cover)
+                            paths = export_cover(d, cover, m[2])
                         except FileNotFoundError as e:
                             return self._error(409, str(e))
-                    return self._json({"exported": _rel(path)})
+                    return self._json({"exported": [_rel(x) for x in paths]})
                 return
             self._error(404, "ありません")
         except Exception as e:
@@ -266,10 +268,16 @@ def _rel(path: Path) -> str:
     return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
 
 
-def export_cover(ep_dir: Path, cover: cv.Cover) -> Path:
-    out = ep_dir / "build" / "cover.png"
-    out.parent.mkdir(exist_ok=True)
-    cv.render_cover(cover, ep_dir).save(out)
+def export_cover(ep_dir: Path, cover: cv.Cover, board: str = "cover") -> list[Path]:
+    """build/<board>.png に書き出す。横のコンセプトアートは YouTube 用の thumbnail.jpg（1280×720）も。"""
+    build = ep_dir / "build"
+    build.mkdir(exist_ok=True)
+    im = cv.render_cover(cover, ep_dir, board=board)
+    out = [build / f"{board}.png"]
+    im.save(out[0])
+    if board == "concept":
+        out.append(build / "thumbnail.jpg")
+        im.resize(cv.THUMBNAIL_SIZE, Image.LANCZOS).save(out[1], quality=90)
     return out
 
 

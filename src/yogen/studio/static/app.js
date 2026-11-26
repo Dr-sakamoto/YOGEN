@@ -22,6 +22,7 @@ const api = async (url, opt = {}) => {
   return body;
 };
 
+const BOARD_NAME = { concept: "コンセプト（横）", cover: "ショート表紙（縦）" };
 const KIND_NAME = { fill: "色面", artwork: "作品", sticker: "素材", logo: "ロゴ", wordmark: "題字", text: "文字" };
 const STATUS_NAME = {
   draft: "企画中", scripted: "台本あり", fact_checked: "事実確認済み", approved: "試写OK",
@@ -31,10 +32,11 @@ const GRID = 30; // キャンバス座標で30px（1080 = 36マス）
 
 let P = null; // /api/parts
 const S = {
-  ep: null, cover: { layers: [] }, sel: -1, hist: [], fut: [], dirty: false,
+  ep: null, board: "concept", cover: { layers: [] }, sel: -1, hist: [], fut: [], dirty: false,
   grid: true, safe: false, mode: "make", tab: "artwork", scale: 0.4,
 };
 const aspect = {}; // 画像URL → 高さ/幅
+const canvas = () => P.canvases[S.board];
 
 // ---------------------------------------------------------------- 共通
 function toast(msg, err = false, list = null) {
@@ -59,14 +61,17 @@ async function route() {
     P = await api("/api/parts");
     installFonts();
   }
-  const m = location.hash.match(/^#\/cover\/([\w-]+)/);
-  if (S.dirty && !(m && S.ep && m[1] === S.ep.id) && !confirm("保存していない変更があります。離れますか？")) {
+  const old = location.hash.match(/^#\/cover\/([\w-]+)$/); // 以前のリンク
+  if (old) { location.replace(`#/edit/${old[1]}/cover`); return; }
+  const m = location.hash.match(/^#\/edit\/([\w-]+)\/(concept|cover)/);
+  const same = m && S.ep && m[1] === S.ep.id && m[2] === S.board;
+  if (S.dirty && !same && !confirm("保存していない変更があります。離れますか？")) {
     history.back();
     return;
   }
   $("#view-list").hidden = !!m;
   $("#view-editor").hidden = !m;
-  if (m) await openEditor(m[1]);
+  if (m) await openEditor(m[1], m[2]);
   else await showList();
 }
 window.addEventListener("hashchange", route);
@@ -85,11 +90,11 @@ async function showList() {
 function card(e) {
   const at = P.pipeline.indexOf(e.status);
   const thumb = e.artworks_ready
-    ? h("img", { src: `/api/episodes/${e.id}/cover.jpg?w=360&t=${Date.now()}`, alt: "", loading: "lazy" })
+    ? h("img", { src: `/api/episodes/${e.id}/concept.jpg?w=640&t=${Date.now()}`, alt: "", loading: "lazy" })
     : h("div", { class: "ph" }, "作品画像が未取得", h("br"), h("code", {}, `yogen fetch ${e.id}`));
   const c = e.claims;
   return h("article", { class: "card" },
-    h("a", { class: "thumb", href: `#/cover/${e.id}`, title: "表紙をつくる" }, thumb),
+    h("a", { class: "thumb", href: `#/edit/${e.id}/concept`, title: "コンセプトアートをつくる" }, thumb),
     h("div", { class: "body" },
       h("div", { class: "id" }, e.id),
       h("h2", {}, e.title),
@@ -100,17 +105,21 @@ function card(e) {
         c ? h("span", { class: "chip " + (c.verified === c.total ? "ok" : "warn") }, `事実確認 ${c.verified}/${c.total}`)
           : h("span", { class: "chip" }, "台本なし"),
         h("span", { class: "chip" }, "公開 " + (e.publish_at || "未定")),
-        h("span", { class: "chip " + (e.has_cover ? "ok" : "") }, e.has_cover ? "表紙あり" : "表紙なし"),
+        h("span", { class: "chip " + (e.has_concept ? "ok" : "") }, e.has_concept ? "コンセプトあり" : "コンセプトなし"),
+        h("span", { class: "chip " + (e.has_cover ? "ok" : "") }, e.has_cover ? "縦の表紙あり" : "縦の表紙なし"),
         h("span", { class: "chip" }, e.colors.map((k) => h("span", { class: "swatch", style: { background: hex(k) }, title: P.palette[k].name })))),
-      h("div", { class: "row" }, h("a", { href: `#/cover/${e.id}` }, h("button", { class: "primary" }, "表紙をつくる")))));
+      h("div", { class: "row" },
+        h("a", { href: `#/edit/${e.id}/concept` }, h("button", { class: "primary" }, "コンセプトアート（横）")),
+        h("a", { href: `#/edit/${e.id}/cover` }, h("button", {}, "ショート表紙（縦）")))));
 }
 
 // ---------------------------------------------------------------- エディタ：開く
-async function openEditor(id) {
-  if (S.ep && S.ep.id === id) return;
+async function openEditor(id, board) {
+  if (S.ep && S.ep.id === id && S.board === board) return;
   S.ep = await api(`/api/episodes/${id}`);
-  S.cover = S.ep.cover;
-  S.sel = -1; S.hist = []; S.fut = []; S.dirty = !S.ep.cover_saved; S.mode = "make";
+  S.board = board;
+  S.cover = S.ep.boards[board].cover;
+  S.sel = -1; S.hist = []; S.fut = []; S.dirty = !S.ep.boards[board].saved; S.mode = "make";
   S.tab = "artwork";
   // 作品の縦横比は episode.yaml の値から
   for (const a of S.ep.artworks) if (a.width && a.height) aspect[artUrl(a.key)] = a.height / a.width;
@@ -118,15 +127,18 @@ async function openEditor(id) {
   buildTray();
   fitStage();
   render();
-  if (!S.ep.cover_saved) toast("雛形を置きました。動かして「保存」すると cover.yaml になります");
+  if (!S.ep.boards[board].saved) toast(`雛形を置きました。動かして「保存」すると ${board}.yaml になります`);
 }
 
 function buildTop() {
   const seg = h("div", { class: "seg" },
     h("button", { id: "m-make", onclick: () => setMode("make") }, "つくる"),
     h("button", { id: "m-check", onclick: () => setMode("check") }, "たしかめる"));
+  const boards = h("div", { class: "seg" }, Object.entries(BOARD_NAME).map(([b, name]) =>
+    h("button", { class: S.board === b ? "on" : "", onclick: () => { location.hash = `#/edit/${S.ep.id}/${b}`; } }, name)));
   $("#top-slot").replaceChildren(
     h("a", { href: "#/" }, h("button", {}, "← 一覧")),
+    boards,
     h("span", { class: "title" }, S.ep.working_title || S.ep.title),
     h("span", { id: "dirty", class: "dirty-dot", title: "未保存", hidden: true }),
     h("span", { class: "spacer" }),
@@ -136,7 +148,7 @@ function buildTop() {
     h("button", { id: "b-grid", onclick: () => { S.grid = !S.grid; render(); } }, "マス目"),
     h("button", { id: "b-safe", onclick: () => { S.safe = !S.safe; render(); } }, "隠れる範囲"),
     h("button", { class: "primary", onclick: save }, "保存"),
-    h("button", { onclick: exportPng, title: "build/cover.png に書き出す" }, "書き出し"));
+    h("button", { onclick: exportPng, title: `build/${S.board}.png に書き出す` }, "書き出し"));
 }
 
 // ---------------------------------------------------------------- パーツの棚
@@ -146,13 +158,13 @@ function buildTray() {
   $("#tray-tabs").replaceChildren(...TABS.map(([k, name]) =>
     h("button", { class: S.tab === k ? "on" : "", onclick: () => { S.tab = k; buildTray(); } }, name)));
   const tiles = [];
-  const W = P.canvas.width;
+  const { width: W, height: H } = canvas();
   if (S.tab === "artwork") {
     for (const a of S.ep.artworks) {
       tiles.push(tile(
         a.ready ? h("img", { src: artUrl(a.key) }) : h("span", { class: "muted" }, "未取得"),
         `${a.key}${a.artist ? " · " + a.artist : ""}`,
-        { kind: "artwork", artwork: a.key, w: W * 0.7 }, !a.ready,
+        { kind: "artwork", artwork: a.key, w: Math.round(Math.min(W * 0.7, (H * 0.8 * (a.width || 2)) / (a.height || 3))) }, !a.ready,
         a.ready ? null : `先に yogen fetch ${S.ep.id}`));
     }
   } else if (S.tab === "sticker") {
@@ -164,7 +176,7 @@ function buildTray() {
   } else if (S.tab === "fill") {
     for (const k of S.ep.colors) {
       tiles.push(tile(h("div", { class: "blk", style: { background: hex(k) } }),
-        P.palette[k].name, { kind: "fill", color: k, w: W * 1.2, h: 420, rot: -6 }));
+        P.palette[k].name, { kind: "fill", color: k, w: Math.round(W * 1.2), h: Math.round(H * 0.22), rot: -6 }));
     }
   } else if (S.tab === "text") {
     tiles.push(tile(h("span", { class: "txt" }, "Aa"), "題（英語）",
@@ -186,7 +198,7 @@ function tile(pic, label, proto, disabled = false, why = null) {
     e.dataTransfer.setData("application/x-yogen", JSON.stringify(proto));
     e.dataTransfer.effectAllowed = "copy";
   });
-  el.addEventListener("click", () => addLayer(proto, P.canvas.width / 2, P.canvas.height / 2));
+  el.addEventListener("click", () => addLayer(proto, canvas().width / 2, canvas().height / 2));
   return el;
 }
 
@@ -203,7 +215,7 @@ function addLayer(proto, x, y) {
 // ---------------------------------------------------------------- ステージ
 function fitStage() {
   const wrap = $("#stage-wrap");
-  const { width: W, height: H } = P.canvas;
+  const { width: W, height: H } = canvas();
   const sc = Math.min((wrap.clientWidth - 60) / W, (wrap.clientHeight - 60) / H);
   S.scale = Math.max(0.15, sc);
   const st = $("#stage");
@@ -303,6 +315,7 @@ function render() {
   if (!S.ep) return;
   const st = stage();
   st.classList.toggle("checking", S.mode === "check");
+  st.dataset.board = S.board;
   st.classList.toggle("show-safe", S.safe);
   $("#grid").style.display = S.grid ? "" : "none";
   $("#layers").replaceChildren(...S.cover.layers.map(layerEl));
@@ -525,13 +538,15 @@ async function setMode(m) {
     render();
     $("#stage-status").textContent = "書き出しと同じ処理で合成しています…";
     try {
-      const blob = await api(`/api/episodes/${S.ep.id}/preview.jpg?w=1080`, {
+      const blob = await api(`/api/episodes/${S.ep.id}/${S.board}/preview.jpg?w=${Math.min(1280, canvas().width)}`, {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(S.cover) });
       if (S.mode !== "check") return;
       const img = $("#preview");
       if (img.src) URL.revokeObjectURL(img.src);
       img.src = URL.createObjectURL(blob);
-      $("#stage-status").textContent = "書き出しと同じ見え方です。斜線はショートの画面で隠れやすい範囲（目安）。";
+      $("#stage-status").textContent = S.board === "concept"
+        ? "書き出しと同じ見え方です。斜線は再生時間の表示で隠れる範囲（目安）。"
+        : "書き出しと同じ見え方です。斜線はショートの画面で隠れやすい範囲（目安）。";
     } catch (e) {
       showError(e);
       S.mode = "make";
@@ -548,10 +563,11 @@ function showError(e) {
 
 async function save() {
   try {
-    const r = await api(`/api/episodes/${S.ep.id}/cover`, {
+    const r = await api(`/api/episodes/${S.ep.id}/${S.board}`, {
       method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(S.cover) });
     S.dirty = false;
-    S.ep.cover_saved = true;
+    S.ep.boards[S.board].saved = true;
+    S.ep.boards[S.board].cover = S.cover;
     render();
     toast(`保存しました：${r.saved}`);
     return true;
@@ -562,8 +578,8 @@ async function exportPng() {
   if (S.dirty && !(await save())) return;
   toast("書き出しています…");
   try {
-    const r = await api(`/api/episodes/${S.ep.id}/export`, { method: "POST" });
-    toast(`書き出しました：${r.exported}`);
+    const r = await api(`/api/episodes/${S.ep.id}/${S.board}/export`, { method: "POST" });
+    toast("書き出しました", false, r.exported);
   } catch (e) { showError(e); }
 }
 
